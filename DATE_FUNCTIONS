@@ -1,0 +1,47 @@
+Great question, Saibabu — SQL offers a rich set of **date functions** to manipulate, extract, and format date and time values. Here's a concise cheat sheet tailored for **MySQL**, with examples and usage notes:
+
+---
+
+### 📅 MySQL Date Functions Cheat Sheet
+
+| Function | Description | Example | Output |
+|---------|-------------|---------|--------|
+| `CURDATE()` | Current date | `SELECT CURDATE();` | `2025-09-22` |
+| `NOW()` | Current date and time | `SELECT NOW();` | `2025-09-22 16:27:00` |
+| `DATE()` | Extract date from datetime | `SELECT DATE(NOW());` | `2025-09-22` |
+| `YEAR(date)` | Extract year | `SELECT YEAR('2025-09-22');` | `2025` |
+| `MONTH(date)` | Extract month | `SELECT MONTH('2025-09-22');` | `9` |
+| `DAY(date)` | Extract day | `SELECT DAY('2025-09-22');` | `22` |
+| `DAYNAME(date)` | Day of week | `SELECT DAYNAME('2025-09-22');` | `Monday` |
+| `DATEDIFF(d1, d2)` | Days between dates | `SELECT DATEDIFF('2025-10-01', '2025-09-22');` | `9` |
+| `DATE_ADD(date, INTERVAL n unit)` | Add time | `SELECT DATE_ADD('2025-09-22', INTERVAL 10 DAY);` | `2025-10-02` |
+| `DATE_SUB(date, INTERVAL n unit)` | Subtract time | `SELECT DATE_SUB('2025-09-22', INTERVAL 1 MONTH);` | `2025-08-22` |
+| `STR_TO_DATE(str, format)` | Convert string to date | `SELECT STR_TO_DATE('22-09-2025', '%d-%m-%Y');` | `2025-09-22` |
+| `DATE_FORMAT(date, format)` | Format date | `SELECT DATE_FORMAT(NOW(), '%d/%m/%Y');` | `22/09/2025` |
+
+---
+
+### 🧠 Common Use Cases
+
+- **Filter by date range:**
+  ```sql
+  SELECT * FROM orders
+  WHERE order_date BETWEEN '2025-09-01' AND '2025-09-30';
+  ```
+
+- **Group by month:**
+  ```sql
+  SELECT MONTH(order_date) AS month, COUNT(*) AS total_orders
+  FROM orders
+  GROUP BY MONTH(order_date);
+  ```
+
+- **Calculate age:**
+  ```sql
+  SELECT TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS age
+  FROM users;
+  ```
+
+---
+
+Would you like the same cheat sheet for BigQuery or PostgreSQL next? I can also show how to use these in reporting dashboards or automation scripts.
