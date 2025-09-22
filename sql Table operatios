@@ -1,0 +1,279 @@
+Data Integrity: Constraints
+
+In SQL, data integrity is crucial for ensuring that the data in your database remains accurate, consistent, and reliable. Constraints are used to enforce rules on the data in tables, which helps maintain data integrity. Here are the main types of constraints in SQL : 
+
+PRIMARY KEY: Uniquely identifies each row in a table. Ensures no NULL and values are unique.
+
+Syntax : 
+
+SQL
+CREATE TABLE students (
+ student_id INT PRIMARY KEY,
+
+
+FOREIGN KEY: Links two tables together. Enforces referential integrity between parent and child tables.
+
+Syntax : 
+
+SQL
+UNIQUE: Ensures all values in a column are unique.
+
+Syntax : 
+
+SQL
+NOT NULL: Ensures that a column cannot have NULL values.
+
+Syntax : 
+
+SQL
+CHECK: Ensures a condition must be met for each row.\
+
+Syntax : 
+
+SQL
+DEFAULT: Sets a default value if no value is provided.
+
+Syntax : 
+
+SQL
+
+DDL (Data Definition Language) : 
+
+Used to define, create, modify, and manage database structures such as tables, indexes, schemas, and constraints. Below are the DDL Commands : 
+
+CREATE: Creates a new table or database.
+
+Syntax :
+
+SQL
+Example : 
+
+SQL
+
+ALTER: Modifies an existing table (add, modify, drop columns). The below-mentioned things can be done using Alter : 
+
+Category
+Related Commands
+Column Modifications	- Add a Column
+- Drop a Column
+- Modify a Column
+- Rename a Column
+- Change Column Nullability (NULL/NOT NULL)
+Table Renaming	- Rename the Table
+Constraint Management	- Add a Constraint
+- Drop a Constraint
+Default Modifications	- Change Column Default Value
+- Drop Column Default Value
+
+Here is the syntax & examples of each types of commands : 
+
+Operation	Description	Syntax	Example
+Add a Column	Adds a new column to an existing table.	ALTER TABLE table_name ADD column_name data_type [constraint];	ALTER TABLE employees ADD email VARCHAR(255);
+Drop a Column	Removes an existing column from a table.	ALTER TABLE table_name DROP COLUMN column_name;	ALTER TABLE employees DROP COLUMN email;
+Modify a Column	Changes the data type, size, or constraints of a column.	ALTER TABLE table_name MODIFY COLUMN column_name new_data_type;	ALTER TABLE employees MODIFY COLUMN name VARCHAR(200);
+Rename a Column	Changes the name of an existing column.	ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;	ALTER TABLE employees RENAME COLUMN name TO full_name;
+Rename a Table	Renames an existing table.	ALTER TABLE old_table_name RENAME TO new_table_name;	ALTER TABLE employees RENAME TO staff;
+Add a Constraint	Adds a new constraint (e.g., PRIMARY KEY, FOREIGN KEY).	ALTER TABLE table_name ADD CONSTRAINT constraint_name constraint_type (column_name);	ALTER TABLE employees ADD CONSTRAINT pk_employee_id PRIMARY KEY (employee_id);
+Drop a Constraint	Removes a constraint (e.g., PRIMARY KEY, UNIQUE).	ALTER TABLE table_name DROP CONSTRAINT constraint_name;	ALTER TABLE employees DROP CONSTRAINT pk_employee_id;
+Change Column Default Value	Modifies or adds a default value for an existing column.	ALTER TABLE table_name ALTER COLUMN column_name SET DEFAULT default_value;	ALTER TABLE employees ALTER COLUMN salary SET DEFAULT 5000;
+Drop Column Default Value	Removes the default value set for a column.	ALTER TABLE table_name ALTER COLUMN column_name DROP DEFAULT;	ALTER TABLE employees ALTER COLUMN salary DROP DEFAULT;
+Change a Column's Nullability	Changes whether a column allows NULL values.	ALTER TABLE table_name MODIFY columnname data\type [NULL | NOT NULL];	ALTER TABLE employees MODIFY COLUMN age INT NOT NULL;
+
+TRUNCATE: Removes all rows from a table without deleting the table.
+
+Syntax :
+
+SQL
+Example : 
+
+SQL
+DROP: Deletes a table or database.
+
+Syntax : 
+
+SQL
+Example : 
+
+SQL
+
+Data Manipulation Language (DML)
+
+DML is used for managing data within tables.
+
+Common DML Commands: INSERT, UPDATE, DELETE
+
+INSERT: Adds data to a table.
+
+SQL
+UPDATE: Modifies existing data in a table.
+
+SQL
+DELETE: Removes data from a table.
+
+SQL
+
+Data Query Language (DQL)
+
+DQL is primarily used to query the database and retrieve data from tables.
+
+Common DQL Command:
+
+SQL
+
+Difference between DELETE, DROP & TRUNCATE : 
+
+Criteria	DROP	DELETE	TRUNCATE
+Operation Type	Data Definition Language (DDL)	Data Manipulation Language (DML)	Data Definition Language (DDL)
+Purpose	Removes the entire table or database structure permanently.	Removes specific rows from a table based on a condition.	Removes all rows from a table but keeps the table structure.
+Data Removal	Removes both data and table schema.	Removes data but retains the table structure and schema.	Removes all data but retains the table structure.
+WHERE Clause	Not applicable (applies to the whole object).	Can use a WHERE clause to specify which rows to delete.	WHERE clause cannot be used; applies to the entire table.
+Rollback Ability	Cannot be rolled back (in most cases, especially without a transaction).	Can be rolled back if used inside a transaction.	Cannot be rolled back in most cases (similar to DROP).
+Performance	Fast, but removes the entire table or database.	Slower as it removes rows one by one and logs each deletion.	Faster than DELETE since it doesn't log individual row deletions.
+Use Case	When you need to completely remove a table.	When you need to delete specific rows based on conditions.	When you need to quickly remove all data but retain the table structure for future use.
+
+Alias & Indentation
+
+Alias :
+An alias in SQL is a temporary name assigned to a table or column to simplify query writing and improve readability.
+
+Usage:
+
+ Column Alias:
+
+SELECT employee_id AS ID, name AS FullName FROM employees;
+Table Alias: 
+
+SELECT emp.name FROM employees AS emp
+Indentation : 
+
+Indentation refers to adding spaces or tabs at the beginning of lines of code to visually structure code blocks. Proper indentation helps improve code readability, making it easier to follow logic and structure.
+
+Example (SQL):
+
+SQL
+Indentation in programming languages like Python is mandatory, but even in SQL, it makes queries more readable.
+
+
+SQL Clauses
+
+A "clause" in SQL refers to specific components of a query that provide additional instructions or conditions on the data. Clauses typically modify or filter the output of the main operation (SELECT, UPDATE, DELETE, etc.). Common clauses include:
+
+WHERE: Filter data based on conditions.
+GROUP BY: Group rows for aggregation.
+ORDER BY: Sort data.
+HAVING: Filter groups based on conditions.
+These clauses are used to refine or control what data is returned or how it’s displayed, but they rely on the main operations like SELECT and FROM.
+
+SELECT and FROM are Core Query Keywords:
+SELECT: The primary keyword used to retrieve data from the database. It tells the database what columns to retrieve.
+FROM: Specifies the source of the data (which table or tables to pull data from). 
+
+Clauses:
+
+WHERE: Filters rows based on conditions.
+SQL
+GROUP BY: Groups rows sharing a property so that aggregate functions can be applied to each group.
+SQL
+HAVING: Filters groups created by GROUP BY.
+SQL
+ORDER BY: Sorts results in ascending (ASC) or descending (DESC) order.
+SQL
+LIMIT/OFFSET: Limits the number of rows returned by a query.
+SQL
+
+Order of SQL Clauses in a Query
+
+SELECT: Specifies columns to retrieve.
+FROM: Specifies the table(s) to query.
+JOIN: Combines rows from different tables.
+WHERE: Filters rows.
+GROUP BY: Groups rows.
+HAVING: Filters groups.
+ORDER BY: Sorts rows.
+LIMIT/OFFSET: Limits the number of rows.
+
+Example:
+
+SQL
+
+Order of SQL Execution
+
+FROM: First, it identifies the source table(s).
+JOIN: Joins tables, if any.
+WHERE: Filters rows based on conditions.
+GROUP BY: Groups rows.
+HAVING: Filters the grouped data.
+SELECT: Retrieves the specified columns.
+ORDER BY: Orders the rows.
+LIMIT/OFFSET: Limits the number of rows.
+Example Execution:
+
+SQL
+
+Comparison Table: SQL Query Order vs SQL Order of Execution
+
+SQL Query Order
+SQL Order of Execution
+Explanation
+1. SELECT	1. FROM	FROM determines the source of the data (tables, views) for the query.
+2. FROM	2. JOIN (if any)	JOIN operations are performed next, combining data from multiple tables.
+3. JOIN(if any)	3. WHERE	WHERE filters rows based on conditions before aggregation or other operations.
+4. WHERE	4. GROUP BY	GROUP BY groups rows to apply aggregate functions like COUNT(), SUM(), etc.
+5. GROUP BY	5. HAVING	HAVING filters groups formed by GROUP BY after aggregation.
+6. HAVING	6. SELECT	SELECT retrieves specific columns and applies aggregate functions to the grouped data.
+7. ORDER BY	7. ORDER BY	ORDER BY sorts the result set based on one or more columns.
+8. LIMIT/OFFSET	8. LIMIT/OFFSET	LIMIT/OFFSET restricts the number of rows returned, and skips a set number of rows if using OFFSET.
+
+Types of Joins
+
+Joins combine rows from two or more tables based on related columns.
+
+INNER JOIN: Returns only the rows with matching values in both tables.
+SQL
+LEFT JOIN (LEFT OUTER JOIN): Returns all rows from the left table and matched rows from the right table. Non-matching rows from the right table return NULL.
+SQL
+RIGHT JOIN (RIGHT OUTER JOIN): Returns all rows from the right table and matched rows from the left table. Non-matching rows from the left table return NULL.
+SQL
+FULL OUTER JOIN: Returns all rows when there is a match in either left or right table. Rows from both tables that do not match are returned with NULL values.
+SQL
+CROSS JOIN: Returns the Cartesian product of both tables. Every row from the left table is joined with every row of the right table.
+SQL
+NATURAL JOIN: Automatically joins tables based on columns with the same names and compatible data types.
+SQL
+
+Clean Code Principles :
+
+Clean code principles refer to a set of guidelines for writing code that is easy to understand, maintain, and extend. Some of the key principles include:
+Readable: Code should be simple and easy to read.
+Consistent Naming: Use clear, meaningful variable names/aliased names.
+Single Responsibility: Functions and methods should perform only one task.
+Commenting: Add comments to explain complex logic.
+DRY (Don't Repeat Yourself): Avoid duplicating code by reusing functions or methods.
+
+Clean code results in fewer bugs, easier debugging, and better developer collaboration.
+
+
+Best Practices
+
+DML Operations:
+Always use WHERE with UPDATE or DELETE to avoid affecting all rows unintentionally.
+
+Query Optimization:
+Use WHERE clauses to filter data as early as possible in your query.
+Avoid using SELECT *; instead, specify the columns you need to reduce data load.
+
+Joins:
+Use INNER JOIN when you need only matching records from both tables.
+Use LEFT JOIN or RIGHT JOIN for retrieving unmatched rows from one table with NULL values from the other.
+Be careful with CROSS JOIN as it can generate a large number of rows.
+
+Execution Order:
+Write queries considering SQL execution order to ensure filters and conditions are applied efficiently.
+
+Avoid Redundant Data:
+Use appropriate join types to avoid duplication of rows.
+Use DISTINCT carefully; it can slow down queries and may mask underlying data issues.
+
+Limit Data with Clauses:
+Use LIMIT or OFFSET to handle large datasets and avoid over-fetching data.
+GROUP BY with HAVING is useful for filtering after aggregation, but ensures the query is optimized.
