@@ -94,7 +94,78 @@ SELECT
   END AS salary_grade
 FROM employees;
 ```
+CASE Clause
+SQL provides the CASE clause to perform conditional operations. This is similar to the switch case / if-else conditions in other programming languages.
 
----
+Let's learn more about the usage of CASE clause using the given database.
 
-Let me know if you'd like to add this to your GitHub file as a collapsible section, or want a matching Python `if-elif-else` comparison for cross-language clarity.
+Database
+The IMDb dataset consists of movies, actors and cast. You can refer to the database in the code playground for a better understanding.
+
+
+CASE Clause
+Each condition in the CASE clause is evaluated and results in corresponding value when the first condition is met.
+
+Syntax
+SQL
+Note
+In the CASE clause, if no condition is satisfied, it returns the value in the ELSE part. If the ELSE part is specified, CASE clause results in NULL.
+
+We can use CASE in various clauses like SELECT, WHERE, HAVING, ORDER BY and GROUP BY.
+
+Example
+Calculate the tax amount for all movies based on the profit. Check the following table for tax percentages.
+
+profit	tax_percentage
+Less than or equal to 100 crores	10% of profit
+Greater than 100 crores and less than or equal to 500 crores	15% of profit
+Greater than 500 crores	18% of profit
+SQL
+ 
+Output
+id	name	profit	tax_amount
+1	The Matrix	40.13	4.013
+2	Inception	67.68	6.768
+3	The Dark Knight	82.5	8.25
+...	.....	....	...
+...	......	...	....
+Try it Yourself
+Question 1
+
+Categorise movies as following.
+
+Rating	Category
+Less than 5	Poor
+Between 5 and 7	Average
+Greater than 7	Good
+CASE with Aggregates
+CASE statements can also be used together with aggregate functions.
+
+Example
+Get the number of movies with a rating greater than or equal to 8, and the movies with rating less than 8, and are released between 2015 and 2020.
+SQL
+  COUNT(
+
+
+  
+Expand
+Output
+above_eight	below_eight
+4	2
+Try it Yourself!
+Question 1
+
+Get the number of movies with a collection greater than or equal to 100 crores, and the movies with collection less than 100 crores.
+Output
+above_100_cr	below_100_cr
+13	7
+Question 2
+
+For each genre, get the count of movies that had a rating of at least 8.0 and count of movies that had a rating below 8.0.
+Output
+genre	rating_above_or_equal_8	rating_below_8
+Action	7	4
+Animation	2	0
+Drama	1	2
+Mystery	1	1
+Sci-fi	2	0
