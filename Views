@@ -1,0 +1,127 @@
+
+### 📌 What is a View?
+
+A **view** is a virtual table based on a `SELECT` query. It doesn't store data but lets you reuse complex queries as if they were tables.
+
+---
+
+### 🧱 1. Creating a Basic View
+
+```sql
+CREATE VIEW view_name AS
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+```
+
+✅ **Use Case:** Simplify repeated queries, hide sensitive columns, or create read-only dashboards.
+
+---
+
+### 🔁 2. Updating a View
+
+```sql
+CREATE OR REPLACE VIEW view_name AS
+SELECT ...
+FROM ...
+WHERE ...;
+```
+
+✅ **Use Case:** Modify the logic or columns without dropping the view.
+
+---
+
+### 🔄 3. Dropping a View
+
+```sql
+DROP VIEW view_name;
+```
+
+---
+
+### 🔗 4. Views with Joins
+
+```sql
+CREATE VIEW employee_department AS
+SELECT 
+  e.emp_id,
+  e.name,
+  d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.dept_id;
+```
+
+✅ **Use Case:** Combine data across tables for reporting.
+
+⚠️ **Note:** Views with joins are **not updatable** unless they meet strict conditions.
+
+---
+
+### 📊 5. Views with Aggregations
+
+```sql
+CREATE VIEW dept_summary AS
+SELECT 
+  dept_id,
+  COUNT(*) AS total_employees,
+  AVG(salary) AS avg_salary
+FROM employees
+GROUP BY dept_id;
+```
+
+✅ **Use Case:** Create reusable summary reports.
+
+⚠️ **Note:** Views with `GROUP BY`, `SUM()`, `AVG()`, etc. are **not updatable**.
+
+---
+
+### 🧠 6. Updatable Views — Rules
+
+| Feature        | Updatable? | Reason |
+|----------------|------------|--------|
+| Single table   | ✅ Yes      | Direct row mapping |
+| No joins       | ✅ Yes      | No ambiguity |
+| No aggregation | ✅ Yes      | No summary rows |
+| With `JOIN`    | ❌ No       | Multiple source rows |
+| With `GROUP BY`| ❌ No       | Aggregated data |
+| With `DISTINCT`, `LIMIT`, `UNION` | ❌ No | Breaks row traceability |
+
+---
+
+### 🧪 7. Example of an Updatable View
+
+```sql
+CREATE VIEW emp_basic AS
+SELECT emp_id, name, salary
+FROM employees;
+```
+
+```sql
+UPDATE emp_basic SET salary = 75000 WHERE emp_id = 101;
+```
+
+✅ Works because each row maps directly to `employees`.
+
+---
+
+### 🔐 8. Security & Performance Notes
+
+| Topic       | Behavior |
+|-------------|----------|
+| Data Storage | Views don’t store data |
+| Performance | Depends on base query complexity |
+| Security    | Views can restrict column access |
+| Indexing    | Views don’t have indexes — rely on base tables |
+
+---
+
+### 📁 9. Best Practices
+
+- Use views to **encapsulate business logic**
+- Avoid joins and aggregations if you need **updatability**
+- Use `CREATE OR REPLACE VIEW` for safe updates
+- Document view purpose and limitations in comments
+
+---
+
+Let me know if you want this formatted as a README section with collapsible headers, or if you'd like to add matching examples in Python (e.g. Pandas equivalents).
