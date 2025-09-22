@@ -1,0 +1,100 @@
+
+### ✅ What is `CASE`?
+
+The `CASE` clause in MySQL is used to apply **conditional logic** inside SQL queries — similar to `if-else` statements in programming.
+
+---
+
+### 📌 Syntax
+
+```sql
+CASE
+  WHEN condition1 THEN result1
+  WHEN condition2 THEN result2
+  ...
+  ELSE default_result
+END
+```
+
+You can use it in `SELECT`, `UPDATE`, `ORDER BY`, and even inside `WHERE`.
+
+---
+
+### 🧪 Example: Salary Grade
+
+Suppose you have a table `employees` with a column `monthly_salary`. You want to assign a grade based on salary:
+
+```sql
+SELECT 
+  emp_id,
+  monthly_salary,
+  CASE
+    WHEN monthly_salary >= 70000 THEN 'A'
+    WHEN monthly_salary >= 50000 THEN 'B'
+    WHEN monthly_salary >= 30000 THEN 'C'
+    ELSE 'D'
+  END AS salary_grade
+FROM employees;
+```
+
+---
+
+### 📋 Output
+
+| emp_id | monthly_salary | salary_grade |
+|--------|----------------|--------------|
+| 101    | 75000          | A            |
+| 102    | 52000          | B            |
+| 103    | 45000          | C            |
+| 104    | 28000          | D            |
+
+---
+
+### 🔄 Inline `CASE` Example (with `CONCAT`)
+
+```sql
+SELECT 
+  emp_id,
+  CONCAT(first_name, ' ', last_name) AS full_name,
+  CASE performance
+    WHEN 'excellent' THEN '🌟 Top Performer'
+    WHEN 'good' THEN '👍 Solid Contributor'
+    ELSE '🔍 Needs Review'
+  END AS performance_label
+FROM employees;
+```
+
+---
+
+Let me know if you’d like to add examples using `CASE` in `UPDATE`, `ORDER BY`, or `WHERE` clauses — or want a cheat sheet for conditional logic across SQL and Python.
+
+| Use Case | Syntax | Example | Output |
+|----------|--------|---------|--------|
+| **Basic CASE in SELECT** | `CASE WHEN condition THEN result ELSE default END` | `CASE WHEN salary > 70000 THEN 'A' ELSE 'B' END` | `'A'` or `'B'` |
+| **Multiple Conditions** | Chain multiple `WHEN` clauses | `CASE WHEN x > 90 THEN 'A' WHEN x > 75 THEN 'B' ELSE 'C' END` | `'A'`, `'B'`, or `'C'` |
+| **Column Matching** | `CASE column WHEN value THEN result ...` | `CASE grade WHEN 'A' THEN 'Excellent' WHEN 'B' THEN 'Good' END` | `'Excellent'` |
+| **In SELECT Clause** | Used to create derived columns | `SELECT CASE WHEN age < 18 THEN 'Minor' ELSE 'Adult' END AS status` | `'Minor'` or `'Adult'` |
+| **In ORDER BY Clause** | Custom sort logic | `ORDER BY CASE WHEN priority = 'High' THEN 1 ELSE 2 END` | High priority rows first |
+| **In WHERE Clause** | Conditional filtering | `WHERE CASE WHEN active = 1 THEN TRUE ELSE FALSE END` | Filters active rows |
+| **In UPDATE Clause** | Conditional updates | `UPDATE emp SET bonus = CASE WHEN perf = 'A' THEN 1000 ELSE 500 END` | Updates bonus based on performance |
+
+---
+
+### 🔧 Real-World Example: Grading Employees
+
+```sql
+SELECT 
+  emp_id,
+  monthly_salary,
+  CASE
+    WHEN monthly_salary >= 70000 THEN 'A'
+    WHEN monthly_salary >= 50000 THEN 'B'
+    WHEN monthly_salary >= 30000 THEN 'C'
+    ELSE 'D'
+  END AS salary_grade
+FROM employees;
+```
+
+---
+
+Let me know if you'd like to add this to your GitHub file as a collapsible section, or want a matching Python `if-elif-else` comparison for cross-language clarity.
