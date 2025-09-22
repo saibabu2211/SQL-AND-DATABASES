@@ -142,9 +142,21 @@ CASE with Aggregates
 CASE statements can also be used together with aggregate functions.
 
 Example
-Get the number of movies with a rating greater than or equal to 8, and the movies with rating less than 8, and are released between 2015 and 2020.
-SQL
+SELECT
   COUNT(
+    CASE
+      WHEN rating >= 8 THEN 1
+    END
+  ) AS above_eight,
+  COUNT(
+    CASE
+      WHEN rating < 8 THEN 1
+    END
+  ) AS below_eight
+FROM
+  movie
+WHERE
+  CAST(strftime("%Y", release_date) AS INTEGER) BETWEEN 2015 AND 2020;
 
 
   
