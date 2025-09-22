@@ -1,0 +1,15 @@
+SELECT
+  COUNT(
+    CASE
+      WHEN rating >= 8 THEN 1
+    END
+  ) AS above_eight,
+  COUNT(
+    CASE
+      WHEN rating < 8 THEN 1
+    END
+  ) AS below_eight
+FROM
+  movie
+WHERE
+  CAST(strftime("%Y", release_date) AS INTEGER) BETWEEN 2015 AND 2020;
