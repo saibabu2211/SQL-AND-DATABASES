@@ -1,0 +1,42 @@
+
+
+```sql
+CAST(expression AS target_type)
+```
+
+---
+
+### 🔧 Common Examples
+
+| Purpose | Example | Result |
+|--------|---------|--------|
+| String → Integer | `CAST('123' AS UNSIGNED)` | `123` |
+| Integer → String | `CAST(123 AS CHAR)` | `'123'` |
+| Float → Integer | `CAST(123.45 AS SIGNED)` | `123` |
+| Date → String | `CAST(CURDATE() AS CHAR)` | `'2025-09-22'` |
+| String → Date | `CAST('2025-09-22' AS DATE)` | `2025-09-22` |
+
+---
+
+### 🧪 Use in Queries
+
+```sql
+SELECT student_id, CAST(course_progress AS CHAR) AS progress_text
+FROM student_info;
+```
+
+> ✅ Converts `course_progress` to string for display or export.
+
+---
+
+### 🔄 Related: `CONVERT()` (MySQL Alternative)
+
+```sql
+SELECT CONVERT('123.45', DECIMAL(5,2));
+```
+
+> ✅ Works similarly to `CAST()`, but with slightly different syntax.
+
+---
+
+Let me know if you want to use `CAST()` inside `CASE`, `JOIN`, or `WHERE` clauses — I can show you advanced patterns too.
