@@ -183,4 +183,123 @@ WHERE e.salary > d.avg_salary;
 
 ---
 
-Let me know if you’d like a tabular comparison of correlated vs non-correlated subqueries, or a real-world use case like filtering top-performing sales reps by region.
+Here’s a complete, example-driven guide to **Subqueries with `EXISTS` in MySQL**, including all major types — perfect for your GitHub documentation or technical notes.
+
+---
+
+## 🔍 Subqueries with `EXISTS` — MySQL Cheat Sheet
+
+### ✅ What is `EXISTS`?
+
+`EXISTS` checks whether a **subquery returns any rows**. It returns `TRUE` if **at least one row exists**, and `FALSE` otherwise.
+
+```sql
+SELECT ...
+FROM outer_table
+WHERE EXISTS (
+  SELECT ...
+  FROM inner_table
+  WHERE condition
+);
+```
+
+---
+
+## 🧩 Types of `EXISTS` Subqueries
+
+| Type | Description | Use Case | Example |
+|------|-------------|----------|---------|
+| **Basic EXISTS** | Checks if related data exists | Filter rows with matching foreign keys | Employees with valid departments |
+| **Correlated EXISTS** | Subquery depends on outer query | Row-by-row existence check | Employees in Chennai departments |
+| **NOT EXISTS** | Checks if no related data exists | Filter rows with no match | Employees without departments |
+| **EXISTS with JOIN** | Combines `EXISTS` and `JOIN` logic | Efficient filtering | Customers with orders |
+| **EXISTS with Aggregation** | Subquery returns grouped data | Conditional existence of summaries | Departments with >5 employees |
+
+---
+
+### 🧪 1. Basic `EXISTS`
+
+```sql
+SELECT name
+FROM employees e
+WHERE EXISTS (
+  SELECT 1 FROM departments d WHERE d.dept_id = e.dept_id
+);
+```
+
+✅ Returns employees who belong to a valid department.
+
+---
+
+### 🔄 2. Correlated `EXISTS`
+
+```sql
+SELECT name
+FROM employees e
+WHERE EXISTS (
+  SELECT 1 FROM departments d 
+  WHERE d.dept_id = e.dept_id AND d.location = 'Chennai'
+);
+```
+
+✅ Returns employees whose department is in Chennai.
+
+---
+
+### 🚫 3. `NOT EXISTS`
+
+```sql
+SELECT name
+FROM employees e
+WHERE NOT EXISTS (
+  SELECT 1 FROM departments d WHERE d.dept_id = e.dept_id
+);
+```
+
+✅ Returns employees with no matching department — useful for orphaned records.
+
+---
+
+### 🔗 4. `EXISTS` with `JOIN` Logic
+
+```sql
+SELECT c.customer_id, c.name
+FROM customers c
+WHERE EXISTS (
+  SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);
+```
+
+✅ Returns customers who have placed at least one order.
+
+---
+
+### 📊 5. `EXISTS` with Aggregation
+
+```sql
+SELECT dept_id, dept_name
+FROM departments d
+WHERE EXISTS (
+  SELECT 1 FROM employees e 
+  WHERE e.dept_id = d.dept_id 
+  GROUP BY e.dept_id 
+  HAVING COUNT(*) > 5
+);
+```
+
+✅ Returns departments with more than 5 employees.
+
+---
+
+### ⚠️ Performance Tips
+
+| Tip | Reason |
+|-----|--------|
+| Use `EXISTS` for existence checks | Faster than `IN` on large datasets |
+| Avoid `SELECT *` in subquery | Use `SELECT 1` or `SELECT NULL` |
+| Index foreign keys | Speeds up correlated subqueries |
+| Prefer `JOIN` for data retrieval | `EXISTS` is for filtering only |
+
+---
+
+Let me know if you’d like a visual diagram of how `EXISTS` works row-by-row, or a real-world use case like filtering active vendors with recent transactions.
