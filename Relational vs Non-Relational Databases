@@ -1,0 +1,139 @@
+Relational vs Non-Relational Databases
+
+Relational Databases:
+Structure: Data is stored in structured tables with rows and columns (e.g., SQL databases like MySQL, PostgreSQL).
+Schema: Predefined schema with strict data types for each column.
+Relationships: Uses keys (Primary and Foreign) to establish relationships between tables.
+Transactions: ACID (Atomicity, Consistency, Isolation, Durability) compliance ensures data reliability and safety in transactions.
+Examples: MySQL, PostgreSQL, Oracle, SQL Server.
+
+Non-Relational Databases:
+Structure: Data is stored in flexible formats like documents, key-value pairs, wide-column stores, or graphs (e.g., NoSQL databases like MongoDB, Cassandra).
+Schema: No strict schema; more adaptable and scalable with semi-structured or unstructured data.
+Relationships: Not well-suited for complex relationships; typically better for large-scale, distributed data.
+Transactions: Typically do not follow full ACID properties, but some offer eventual consistency (BASE - Basically Available, Soft state, Eventual consistency).
+Examples: MongoDB, Cassandra, DynamoDB, CouchDB.
+
+
+SQL vs NoSQL
+
+SQL:
+Language: Structured Query Language (SQL) for managing data in relational databases.
+Schema: Rigid schema, each table must have a fixed structure.
+Use Cases: Suitable for structured data, relationships between entities, and complex queries.
+Scaling: Vertical scaling (adding more resources to a single machine).
+
+NoSQL:
+Language: Non-SQL or non-relational systems with more flexible query methods.
+Schema: Flexible schema; each document or data entry can have a different structure.
+Use Cases: Best for semi-structured/unstructured data, large-scale applications, and high-speed data processing.
+Scaling: Horizontal scaling (adding more machines to the system).
+
+
+Benefits and Limitations of Relational Databases
+
+Benefits:
+Data Integrity: Ensures data accuracy and consistency.
+ACID Transactions: Strong transactional support for reliable data management.
+Data Relationships: Clear and well-defined relationships between tables using foreign keys.
+Complex Queries: Efficient handling of complex queries with JOINs and nested queries.
+
+Limitations:
+Scalability: Hard to scale horizontally.
+Rigid Schema: Changes to the schema can be challenging in dynamic environments.
+Performance: May experience performance bottlenecks in handling large volumes of unstructured data.
+
+
+E-R Modeling and Diagram
+
+Entity-Relationship (E-R) Modeling:
+Entities: Objects or things that have a distinct existence (e.g., Customer, Order).
+Relationships: Connections between entities (e.g., Customer places Order).
+Attributes: Characteristics of entities (e.g., Customer has Name, Email).
+
+
+Schema
+
+Definition: The structure that defines the organization of data in a database, including tables, relationships, constraints, and data types.
+
+Example:
+
+SQL
+
+Normalization & Denormalization
+
+Normalization:
+Goal: Reduce data redundancy and improve data integrity by dividing large tables into smaller, related tables.
+Forms:
+1NF: Eliminate repeating groups; each field contains atomic values.
+2NF: Eliminate partial dependencies; non-key columns depend on the whole primary key.
+3NF: Eliminate transitive dependencies; non-key columns depend only on the primary key.
+
+Example:
+Unnormalized Table: CustomerName and OrderDetails in one table.
+Normalized: Split into Customers and Orders tables.
+
+Denormalization:
+Goal: Improve read performance by adding redundancy and combining tables.
+When to Use: In cases where performance is more critical than strict adherence to normalized design (e.g., read-heavy applications).
+
+
+BigQuery: Data Warehouse
+
+Creating a Project, Dataset, and Tables:
+
+Create a Project:
+
+Navigate to Google Cloud Console → Select/Create a new project.
+
+Create a Dataset:
+
+ CREATE SCHEMA my_project.my_dataset;
+
+Create Tables:
+
+SQL
+
+SQL Commands - DDL, DML, DCL, TCL, DQL
+
+DDL (Data Definition Language): Used to define database structures.
+   CREATE, ALTER, DROP
+   CREATE TABLE Students (ID INT, Name VARCHAR(50));
+
+DML (Data Manipulation Language): Used to manipulate data within tables.
+
+   INSERT, UPDATE, DELETE
+   INSERT INTO Students (ID, Name) VALUES (1, 'John Doe');
+
+DCL (Data Control Language): Used to control access to data.
+   GRANT, REVOKE
+   GRANT SELECT ON Students TO user_name;
+
+TCL (Transaction Control Language): Used to manage transactions.
+   COMMIT, ROLLBACK
+   BEGIN;
+   INSERT INTO Students (ID, Name) VALUES (2, 'Jane Doe');
+   COMMIT;
+
+DQL (Data Query Language): Used to query data from databases.
+   SELECT
+   SELECT * FROM Students;
+
+
+SQL Data Types
+
+Numeric: INT, FLOAT, DECIMAL
+String: VARCHAR, TEXT
+Date/Time: DATE, TIMESTAMP
+Boolean: BOOLEAN
+Example:
+
+SQL
+
+Summary & Best Practices
+
+Relational vs Non-Relational Databases: Relational databases have structured tables and predefined schema, while non-relational databases are more flexible but less suitable for complex relationships.
+SQL vs NoSQL: SQL is schema-dependent, while NoSQL is schema-flexible and better for large-scale data.
+Normalization: Reduces redundancy, whereas denormalization improves read performance.
+BigQuery: Offers scalable, managed data warehousing solutions.
+SQL Commands: Understanding DDL, DML, DCL, TCL, and DQL is essential for data management.
