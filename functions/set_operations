@@ -1,15 +1,71 @@
-SELECT
-  COUNT(
-    CASE
-      WHEN rating >= 8 THEN 1
-    END
-  ) AS above_eight,
-  COUNT(
-    CASE
-      WHEN rating < 8 THEN 1
-    END
-  ) AS below_eight
-FROM
-  movie
-WHERE
-  CAST(strftime("%Y", release_date) AS INTEGER) BETWEEN 2015 AND 2020;
+Here’s a clear, example-driven guide to **Set Operations in MySQL**, formatted for your GitHub documentation or technical submissions:
+
+---
+
+## 🔗 MySQL Set Operations — Cheat Sheet
+
+Set operations allow you to **combine results from multiple SELECT queries**. These are useful for merging, comparing, or filtering datasets.
+
+---
+
+### 🧩 Supported Set Operators
+
+| Operator | Description | Notes |
+|----------|-------------|-------|
+| `UNION` | Combines results from two queries, removes duplicates | Requires same number and type of columns |
+| `UNION ALL` | Combines results, **keeps duplicates** | Faster than `UNION` |
+| `INTERSECT` | Returns rows common to both queries | **Not supported natively** in MySQL (use `INNER JOIN`) |
+| `EXCEPT` / `MINUS` | Returns rows from first query **not** in second | **Not supported natively** (use `LEFT JOIN` + `IS NULL`) |
+
+---
+
+### ✅ `UNION` Example
+
+```sql
+SELECT city FROM customers
+UNION
+SELECT city FROM suppliers;
+```
+
+**Result:** All unique cities from both tables.
+
+---
+
+### ✅ `UNION ALL` Example
+
+```sql
+SELECT city FROM customers
+UNION ALL
+SELECT city FROM suppliers;
+```
+
+**Result:** All cities including duplicates.
+
+---
+
+### 🔄 Simulating `INTERSECT` with `INNER JOIN`
+
+```sql
+SELECT c.city
+FROM customers c
+INNER JOIN suppliers s ON c.city = s.city;
+```
+
+**Result:** Cities common to both tables.
+
+---
+
+### 🚫 Simulating `EXCEPT` with `LEFT JOIN`
+
+```sql
+SELECT c.city
+FROM customers c
+LEFT JOIN suppliers s ON c.city = s.city
+WHERE s.city IS NULL;
+```
+
+**Result:** Cities in `customers` but not in `suppliers`.
+
+---
+
+Let me know if you’d like a tabular comparison of these operations with performance notes, or a real-world use case like merging employee and contractor lists.
