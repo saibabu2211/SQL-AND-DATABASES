@@ -1,0 +1,186 @@
+
+
+## 🧩 MySQL Subqueries — From Scratch to Advanced
+
+### ✅ What is a Subquery?
+
+A **subquery** is a query nested inside another SQL statement. It returns data used by the outer query — like a temporary result set.
+
+---
+
+### 📌 1. Basic Subquery in `WHERE`
+
+```sql
+SELECT name, salary
+FROM employees
+WHERE salary > (
+  SELECT AVG(salary) FROM employees
+);
+```
+
+✅ **Use Case:** Find employees earning above average.
+
+---
+
+### 📌 2. Subquery in `SELECT`
+
+```sql
+SELECT 
+  name,
+  (SELECT dept_name FROM departments WHERE dept_id = e.dept_id) AS department
+FROM employees e;
+```
+
+✅ **Use Case:** Add related info without a join.
+
+---
+
+### 📌 3. Subquery in `FROM` (Derived Table)
+
+```sql
+SELECT dept_id, avg_salary
+FROM (
+  SELECT dept_id, AVG(salary) AS avg_salary
+  FROM employees
+  GROUP BY dept_id
+) AS dept_avg;
+```
+
+✅ **Use Case:** Use aggregated data as a table.
+
+---
+
+### 📌 4. Correlated Subquery
+
+```sql
+SELECT name
+FROM employees e
+WHERE salary > (
+  SELECT AVG(salary)
+  FROM employees
+  WHERE dept_id = e.dept_id
+);
+```
+
+✅ **Use Case:** Compare each employee to their department’s average.
+
+⚠️ **Note:** Runs once per row — can be slow on large datasets.
+
+---
+
+### 📌 5. Subquery with `IN`
+
+```sql
+SELECT name
+FROM employees
+WHERE dept_id IN (
+  SELECT dept_id FROM departments WHERE location = 'Chennai'
+);
+```
+
+✅ **Use Case:** Filter using a list from another table.
+
+---
+
+### 📌 6. Subquery with `EXISTS`
+
+```sql
+SELECT name
+FROM employees e
+WHERE EXISTS (
+  SELECT 1 FROM departments d WHERE d.dept_id = e.dept_id AND d.location = 'Chennai'
+);
+```
+
+✅ **Use Case:** Check if related data exists.
+
+---
+
+### 🧠 Subquery vs JOIN — When to Use
+
+| Use Case | JOIN | Subquery |
+|----------|------|----------|
+| Combine columns from multiple tables | ✅ Yes | ✅ Yes |
+| Filter based on related table | ✅ Yes | ✅ Yes |
+| Aggregate then filter | ❌ Complex | ✅ Easier with subquery |
+| Performance on large data | ✅ Faster | ❌ Slower (esp. correlated) |
+
+---
+Here’s a crystal-clear explanation of **Correlated Subqueries in MySQL**, tailored for your GitHub documentation or technical notes:
+
+---
+
+## 🔄 Correlated Subqueries — MySQL Cheat Sheet
+
+### ✅ What is a Correlated Subquery?
+
+A **correlated subquery** is a subquery that **depends on the outer query** for its values. It’s evaluated **once per row** of the outer query — unlike regular subqueries, which run once globally.
+
+---
+
+### 📌 Syntax Pattern
+
+```sql
+SELECT ...
+FROM outer_table o
+WHERE o.column OPERATOR (
+  SELECT ...
+  FROM inner_table i
+  WHERE i.column = o.column
+);
+```
+
+---
+
+### 🧪 Example: Employees Above Department Average
+
+```sql
+SELECT 
+  emp_id,
+  name,
+  salary,
+  dept_id
+FROM employees e
+WHERE salary > (
+  SELECT AVG(salary)
+  FROM employees
+  WHERE dept_id = e.dept_id
+);
+```
+
+🔍 **Explanation:**
+- For each employee `e`, the subquery calculates the **average salary of their department**.
+- Then it checks if `e.salary` is greater than that average.
+
+---
+
+### ⚠️ Key Characteristics
+
+| Feature | Behavior |
+|--------|----------|
+| Depends on outer query | ✅ Yes |
+| Runs per outer row | ✅ Yes |
+| Slower on large datasets | ❌ Can be inefficient |
+| Useful for row-by-row comparisons | ✅ Yes |
+| Can be replaced with JOIN + GROUP BY | ✅ Often better for performance |
+
+---
+
+### 🔁 Performance Tip
+
+If possible, rewrite correlated subqueries using `JOIN` and `GROUP BY` for better performance:
+
+```sql
+SELECT e.emp_id, e.name, e.salary, e.dept_id
+FROM employees e
+JOIN (
+  SELECT dept_id, AVG(salary) AS avg_salary
+  FROM employees
+  GROUP BY dept_id
+) d ON e.dept_id = d.dept_id
+WHERE e.salary > d.avg_salary;
+```
+
+---
+
+Let me know if you’d like a tabular comparison of correlated vs non-correlated subqueries, or a real-world use case like filtering top-performing sales reps by region.
