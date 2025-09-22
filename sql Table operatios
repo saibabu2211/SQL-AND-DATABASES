@@ -9,31 +9,54 @@ Syntax :
 SQL
 CREATE TABLE students (
  student_id INT PRIMARY KEY,
-
+ name VARCHAR(50)
+);
 
 FOREIGN KEY: Links two tables together. Enforces referential integrity between parent and child tables.
 
 Syntax : 
 
 SQL
+CREATE TABLE orders (
+ order_id INT,
+ student_id INT,
+ FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+
+
 UNIQUE: Ensures all values in a column are unique.
 
 Syntax : 
 
 SQL
+CREATE TABLE employees (
+ email VARCHAR(100) UNIQUE
+);
+
+
 NOT NULL: Ensures that a column cannot have NULL values.
 
 Syntax : 
+CREATE TABLE products (
+ product_name VARCHAR(100) NOT NULL
+);
 
 SQL
 CHECK: Ensures a condition must be met for each row.\
 
 Syntax : 
+CREATE TABLE employees (
+ age INT CHECK (age >= 18)
+);
+
 
 SQL
 DEFAULT: Sets a default value if no value is provided.
 
 Syntax : 
+CREATE TABLE orders (
+ order_status VARCHAR(20) DEFAULT 'Pending'
+);
 
 SQL
 
@@ -44,9 +67,18 @@ Used to define, create, modify, and manage database structures such as tables, i
 CREATE: Creates a new table or database.
 
 Syntax :
+CREATE TABLE table_name (
+ column1 datatype constraint, 
+ column2 datatype constraint
+);
 
 SQL
 Example : 
+CREATE TABLE employees (
+ employee_id INT PRIMARY KEY,
+ name VARCHAR(50)
+);
+
 
 SQL
 
@@ -55,15 +87,16 @@ ALTER: Modifies an existing table (add, modify, drop columns). The below-mention
 Category
 Related Commands
 Column Modifications	- Add a Column
-- Drop a Column
-- Modify a Column
-- Rename a Column
-- Change Column Nullability (NULL/NOT NULL)
-Table Renaming	- Rename the Table
+                     - Drop a Column
+                     - Modify a Column
+                     - Rename a Column
+                     - Change Column Nullability (NULL/NOT NULL)
+
+Table Renaming 	- Rename the Table
 Constraint Management	- Add a Constraint
-- Drop a Constraint
+                      - Drop a Constraint
 Default Modifications	- Change Column Default Value
-- Drop Column Default Value
+                      - Drop Column Default Value
 
 Here is the syntax & examples of each types of commands : 
 
@@ -82,19 +115,22 @@ Change a Column's Nullability	Changes whether a column allows NULL values.	ALTER
 TRUNCATE: Removes all rows from a table without deleting the table.
 
 Syntax :
+TRUNCATE TABLE table_name;
 
 SQL
 Example : 
+TRUNCATE TABLE employees;
+
 
 SQL
 DROP: Deletes a table or database.
 
-Syntax : 
+Syntax : DROP TABLE table_name;
 
 SQL
 Example : 
+DROP TABLE employees;
 
-SQL
 
 Data Manipulation Language (DML)
 
@@ -103,21 +139,30 @@ DML is used for managing data within tables.
 Common DML Commands: INSERT, UPDATE, DELETE
 
 INSERT: Adds data to a table.
+INSERT INTO Employees (ID, Name, Department, Salary) 
+VALUES (1, 'John Doe', 'Engineering', 5000);
 
 SQL
 UPDATE: Modifies existing data in a table.
+UPDATE Employees 
+SET Salary = 5500 
+WHERE ID = 1;
 
 SQL
 DELETE: Removes data from a table.
-
-SQL
+DELETE FROM Employees 
+WHERE ID = 1;
 
 Data Query Language (DQL)
 
 DQL is primarily used to query the database and retrieve data from tables.
 
 Common DQL Command:
+SELECT: Retrieves data from one or more tables.
 
+SELECT Name, Department, Salary 
+FROM Employees 
+WHERE Department = 'Engineering';
 SQL
 
 Difference between DELETE, DROP & TRUNCATE : 
@@ -130,6 +175,7 @@ WHERE Clause	Not applicable (applies to the whole object).	Can use a WHERE claus
 Rollback Ability	Cannot be rolled back (in most cases, especially without a transaction).	Can be rolled back if used inside a transaction.	Cannot be rolled back in most cases (similar to DROP).
 Performance	Fast, but removes the entire table or database.	Slower as it removes rows one by one and logs each deletion.	Faster than DELETE since it doesn't log individual row deletions.
 Use Case	When you need to completely remove a table.	When you need to delete specific rows based on conditions.	When you need to quickly remove all data but retain the table structure for future use.
+
 
 Alias & Indentation
 
@@ -152,7 +198,14 @@ Example (SQL):
 
 SQL
 Indentation in programming languages like Python is mandatory, but even in SQL, it makes queries more readable.
-
+SELECT 
+ employee_id,
+ name
+FROM employees
+WHERE 
+ age > 30
+ORDER BY 
+ name;
 
 SQL Clauses
 
@@ -171,14 +224,31 @@ FROM: Specifies the source of the data (which table or tables to pull data from)
 Clauses:
 
 WHERE: Filters rows based on conditions.
+SELECT * FROM Employees 
+WHERE Salary > 4000;
+
 SQL
 GROUP BY: Groups rows sharing a property so that aggregate functions can be applied to each group.
+SELECT Department, AVG(Salary) 
+FROM Employees 
+GROUP BY Department;
+
 SQL
 HAVING: Filters groups created by GROUP BY.
+SELECT Department, AVG(Salary) 
+FROM Employees 
+GROUP BY Department 
+HAVING AVG(Salary) > 4000;
+
 SQL
 ORDER BY: Sorts results in ascending (ASC) or descending (DESC) order.
+SELECT * FROM Employees 
+ORDER BY Salary DESC;
+
 SQL
 LIMIT/OFFSET: Limits the number of rows returned by a query.
+SELECT * FROM Employees 
+LIMIT 5 OFFSET 2;
 SQL
 
 Order of SQL Clauses in a Query
@@ -193,6 +263,13 @@ ORDER BY: Sorts rows.
 LIMIT/OFFSET: Limits the number of rows.
 
 Example:
+SELECT Department, COUNT(*)
+FROM Employees
+WHERE Salary > 4000
+GROUP BY Department
+HAVING COUNT(*) > 3
+ORDER BY COUNT(*) DESC
+LIMIT 5;
 
 SQL
 
@@ -207,6 +284,11 @@ SELECT: Retrieves the specified columns.
 ORDER BY: Orders the rows.
 LIMIT/OFFSET: Limits the number of rows.
 Example Execution:
+SELECT Name, Department, Salary 
+FROM Employees 
+WHERE Salary > 4000 
+ORDER BY Salary DESC 
+LIMIT 3;
 
 SQL
 
@@ -230,16 +312,42 @@ Joins combine rows from two or more tables based on related columns.
 
 INNER JOIN: Returns only the rows with matching values in both tables.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+INNER JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+
+
 LEFT JOIN (LEFT OUTER JOIN): Returns all rows from the left table and matched rows from the right table. Non-matching rows from the right table return NULL.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+LEFT JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+
+
 RIGHT JOIN (RIGHT OUTER JOIN): Returns all rows from the right table and matched rows from the left table. Non-matching rows from the left table return NULL.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+RIGHT JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+
 FULL OUTER JOIN: Returns all rows when there is a match in either left or right table. Rows from both tables that do not match are returned with NULL values.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+FULL OUTER JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+
 CROSS JOIN: Returns the Cartesian product of both tables. Every row from the left table is joined with every row of the right table.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+CROSS JOIN Departments d;
+
+
 NATURAL JOIN: Automatically joins tables based on columns with the same names and compatible data types.
 SQL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e 
+NATURAL JOIN Departments d;
 
 Clean Code Principles :
 
