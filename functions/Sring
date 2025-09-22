@@ -1,0 +1,24 @@
+Absolutely, Saibabu! Here's your **MySQL String Functions Cheat Sheet** in a clean **tabular format**, perfect for GitHub Markdown or any documentation:
+
+---
+
+## 🔤 MySQL String Functions — Tabular Format
+
+| Function | Description | Syntax | Example | Output |
+|----------|-------------|--------|---------|--------|
+| `CONCAT()` | Joins multiple strings | `CONCAT(s1, s2, ...)` | `CONCAT('Hello', ' ', 'World')` | `'Hello World'` |
+| `LENGTH()` | Byte length of string | `LENGTH(str)` | `LENGTH('abc')` | `3` |
+| `CHAR_LENGTH()` | Character count | `CHAR_LENGTH(str)` | `CHAR_LENGTH('abc')` | `3` |
+| `LOWER()` | Converts to lowercase | `LOWER(str)` | `LOWER('SQL')` | `'sql'` |
+| `UPPER()` | Converts to uppercase | `UPPER(str)` | `UPPER('sql')` | `'SQL'` |
+| `TRIM()` | Removes leading/trailing spaces | `TRIM(str)` | `TRIM('  abc  ')` | `'abc'` |
+| `SUBSTRING()` | Extracts part of string | `SUBSTRING(str, pos, len)` | `SUBSTRING('abcdef', 2, 3)` | `'bcd'` |
+| `REPLACE()` | Replaces substring | `REPLACE(str, from, to)` | `REPLACE('abcabc', 'a', 'x')` | `'xbcxbc'` |
+| `INSTR()` | Finds position of substring | `INSTR(str, substr)` | `INSTR('abcdef', 'cd')` | `3` |
+| `LEFT()` | Gets left part of string | `LEFT(str, len)` | `LEFT('abcdef', 3)` | `'abc'` |
+| `RIGHT()` | Gets right part of string | `RIGHT(str, len)` | `RIGHT('abcdef', 3)` | `'def'` |
+| `REVERSE()` | Reverses string | `REVERSE(str)` | `REVERSE('abc')` | `'cba'` |
+
+---
+
+Let me know when you're ready for the **Arithmetic Functions** table or if you'd like a sample SQL query that uses these string functions in a real-world report.
