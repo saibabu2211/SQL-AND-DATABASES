@@ -1,0 +1,42 @@
+Clauses
+Clauses	How to Use It	Functionality
+CREATE TABLE	CREATE TABLE table_name ...	Creates a new table
+INSERT	INSERT INTO table_name ...	Used to insert new data in the table
+SELECT	SELECT col1, col2 ..	Retrieves the selected columns
+SELECT	SELECT * FROM ...	Retrieves all the columns from a table
+FROM	FROM table_name	FROM clause specifies the table(s) in which the required data columns are located
+WHERE	WHERE col > 5	Retrieves only specific rows based on the given conditions
+UPDATE, SET	UPDATE table_name SET column1 = value1;	Updates the value of a column of all the rows (or only specific rows using WHERE clause)
+DELETE	DELETE FROM table_name	Deletes all the rows from the table
+DROP	DROP TABLE table_name	Deletes the table from the database
+ALTER	ALTER TABLE table_name ...	Used to add, delete or modify columns in a table
+ORDER BY	ORDER BY col1 ASC/DESC..	Sorts the table based on the column(s) in the ascending or descending orders
+DISTINCT	SELECT DISTINCT col, ...	Gets the unique values of given column(s)
+LIMIT	LIMIT 10	Limits the number of rows in the output to the mentioned number
+OFFSET	OFFSET 5	Specifies the position (from nth row) from where the chunk of the results are to be retrieved
+GROUP BY	GROUP BY col ...	Groups the rows that have same values in the given columns
+HAVING	HAVING col > 20	Filters the resultant rows after the application of GROUP BY clause
+CASE	CASE WHEN condition1 THEN value1 WHEN .. ELSE .. END	Returns a corresponding value when the first condition is met
+Operators
+Operators	How to Use It	Functionality
+<>	WHERE col <> 5	Filters the rows where the given column is not equal to 5. Similarly, other comparison operators (=,>,<,>=,<=) are also used.
+LIKE	WHERE col LIKE '%Apple%'	Retrieves the rows where the given column has 'apple' within the text
+AND	WHERE col1 > 5 AND col2 < 3	Retrieves the rows that satisfy all the given conditions
+OR	WHERE col1 > 5 OR col2 < 3	Retrieves the rows that satisfy at least one condition
+NOT	WHERE NOT col = 'apple'	Retrieves the rows if the condition(s) is NOT TRUE
+IN	WHERE col IN ('Apple', 'Microsoft')	Retrieves the rows if the column value is present in the given values
+BETWEEN	WHERE col BETWEEN 3 AND 5	Retrieves the rows if the column value is present between (and including) the given values
+Functions
+Functions	How to Use It	Functionality
+COUNT	SELECT COUNT(col) ...	Counts the number of values in the given column
+SUM	SELECT SUM(col) ...	Adds all the values of given column
+MIN	SELECT MIN(col) ...	Gets the minimum value of given column
+MAX	SELECT MAX(col) ...	Gets the maximum value of given column
+AVG	SELECT AVG(col) ...	Gets the average of the values present in the given column
+strftime()	strftime("%Y", col) ...	Extracts the year from the column value in string format. Similarly, we can extract month, day, week of the day and many.
+CAST()	CAST(col AS datatype) ...	Converts the value to the given datatype
+FLOOR()	FLOOR(col)	Rounds a number to the nearest integer below its current value
+CEIL()	CEIL (col)	Rounds a number to the nearest integer above its current value
+ROUND()	ROUND(col)	Rounds a number to a specified number of decimal places
+UPPER()	UPPER(col)	Converts a string to upper case
+LOWER()	Lower(col)	Converts a string to lower case
