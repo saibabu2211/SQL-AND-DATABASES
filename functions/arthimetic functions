@@ -1,0 +1,18 @@
+
+## ➕ MySQL Arithmetic Functions — Tabular Format
+
+| Function | Description | Syntax | Example | Output |
+|----------|-------------|--------|---------|--------|
+| `ABS()` | Returns absolute value | `ABS(x)` | `ABS(-5)` | `5` |
+| `CEIL()` | Rounds up to nearest integer | `CEIL(x)` | `CEIL(4.2)` | `5` |
+| `FLOOR()` | Rounds down to nearest integer | `FLOOR(x)` | `FLOOR(4.8)` | `4` |
+| `ROUND()` | Rounds to specified decimals | `ROUND(x, d)` | `ROUND(3.14159, 2)` | `3.14` |
+| `MOD()` | Returns remainder | `MOD(x, y)` | `MOD(10, 3)` | `1` |
+| `POWER()` | Raises to exponent | `POWER(x, y)` | `POWER(2, 3)` | `8` |
+| `SQRT()` | Square root | `SQRT(x)` | `SQRT(16)` | `4` |
+| `RAND()` | Random float between 0 and 1 | `RAND()` | `RAND()` | `0.726` *(varies)* |
+| `SIGN()` | Returns sign of number | `SIGN(x)` | `SIGN(-5)` | `-1` |
+
+---
+
+Let me know if you’d like a **combined example** using both string and arithmetic functions — like formatting a report with names and totals — or if you want this cheat sheet styled for a README or dashboard.
