@@ -123,5 +123,89 @@ UPDATE emp_basic SET salary = 75000 WHERE emp_id = 101;
 - Document view purpose and limitations in comments
 
 ---
+Great question, Saibabu — and one that’s crucial for understanding how MySQL handles **view updatability**. Here's a breakdown of **why only simple views (single-table, no aggregation) can be updated**, with examples and reasoning:
 
-Let me know if you want this formatted as a README section with collapsible headers, or if you'd like to add matching examples in Python (e.g. Pandas equivalents).
+---
+
+## 🧠 Why Only Simple Views Are Updatable
+
+### ✅ Updatable Views Must Map Directly to Base Table Rows
+
+MySQL allows updates to views **only if it can clearly trace each row in the view back to a single row in a base table**. This is possible only when:
+- The view is based on **one table**
+- There are **no joins**
+- There are **no aggregations**, `GROUP BY`, `DISTINCT`, `LIMIT`, or `UNION`
+
+---
+
+### ❌ Why Joins Break Updatability
+
+**Problem:** When a view includes `JOIN`, each row in the view may represent **multiple base rows**.
+
+**Example:**
+```sql
+CREATE VIEW emp_dept AS
+SELECT e.emp_id, e.name, d.dept_name
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id;
+```
+
+You cannot run:
+```sql
+UPDATE emp_dept SET dept_name = 'Finance' WHERE emp_id = 101;
+```
+
+**Why?** Because `dept_name` comes from `departments`, not `employees`. MySQL doesn’t know which table to update safely.
+
+---
+
+### ❌ Why Aggregations Break Updatability
+
+**Problem:** Aggregated rows represent **summaries**, not individual records.
+
+**Example:**
+```sql
+CREATE VIEW dept_summary AS
+SELECT dept_id, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY dept_id;
+```
+
+You cannot run:
+```sql
+UPDATE dept_summary SET avg_salary = 80000 WHERE dept_id = 2;
+```
+
+**Why?** `avg_salary` is a computed value — there’s no single row to update in `employees`.
+
+---
+
+### ✅ What Makes a View Updatable?
+
+| Feature | Updatable? | Reason |
+|--------|------------|--------|
+| Single table | ✅ Yes | Direct row mapping |
+| No joins | ✅ Yes | No ambiguity |
+| No aggregation | ✅ Yes | No summary rows |
+| No `DISTINCT`, `GROUP BY`, `LIMIT`, `UNION` | ✅ Yes | Keeps row-level traceability |
+
+---
+
+### 🧪 Example of an Updatable View
+
+```sql
+CREATE VIEW emp_basic AS
+SELECT emp_id, name, salary
+FROM employees;
+```
+
+You **can** run:
+```sql
+UPDATE emp_basic SET salary = 75000 WHERE emp_id = 101;
+```
+
+Because each row maps directly to a row in `employees`.
+
+---
+
+Let me know if you’d like a tabular comparison of updatable vs non-updatable views, or a checklist for designing views that support inserts and updates.
