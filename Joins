@@ -1,0 +1,15 @@
+Absolutely, Saibabu! Here's a **complete tabular cheat sheet** of all major **MySQL Join types**, including `NATURAL JOIN`, formatted for GitHub Markdown or technical documentation:
+
+---
+
+## 🔗 MySQL Joins — Tabular Cheat Sheet
+
+| Join Type        | Description | Syntax | Notes |
+|------------------|-------------|--------|-------|
+| `INNER JOIN`     | Returns rows with matching values in both tables | `SELECT ... FROM A INNER JOIN B ON A.id = B.id` | Most commonly used join |
+| `LEFT JOIN`      | Returns all rows from left table, matched rows from right | `SELECT ... FROM A LEFT JOIN B ON A.id = B.id` | Unmatched right rows → `NULL` |
+| `RIGHT JOIN`     | Returns all rows from right table, matched rows from left | `SELECT ... FROM A RIGHT JOIN B ON A.id = B.id` | Unmatched left rows → `NULL` |
+| `FULL OUTER JOIN`| Returns all rows from both tables | ❌ Not supported natively | Simulate with `UNION` of `LEFT JOIN` and `RIGHT JOIN` |
+| `CROSS JOIN`     | Returns Cartesian product (all combinations) | `SELECT ... FROM A CROSS JOIN B` | No `ON` clause needed |
+| `SELF JOIN`      | Joins a table with itself | `SELECT ... FROM A a1 JOIN A a2 ON a1.id = a2.parent_id` | Useful for hierarchical data |
+| `NATURAL JOIN`   | Automatically joins on columns with same name | `SELECT ... FROM A NATURAL JOIN B` | No `ON` clause; risky if unintended column matches |
