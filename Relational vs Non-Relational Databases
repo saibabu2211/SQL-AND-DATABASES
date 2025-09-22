@@ -59,6 +59,12 @@ Definition: The structure that defines the organization of data in a database, i
 Example:
 
 SQL
+CREATE TABLE Customers (
+ CustomerID INT PRIMARY KEY,
+ FirstName VARCHAR(50),
+ LastName VARCHAR(50),
+ Email VARCHAR(100)
+);
 
 Normalization & Denormalization
 
@@ -129,8 +135,19 @@ Boolean: BOOLEAN
 Example:
 
 SQL
+CREATE TABLE my_project.my_dataset.Customers (
+ CustomerID INT64,
+ FirstName STRING,
+ LastName STRING,
+ Email STRING
+);
 
 Summary & Best Practices
+CREATE TABLE Orders (
+ OrderID INT,
+ OrderDate DATE,
+ TotalAmount DECIMAL(10, 2)
+);
 
 Relational vs Non-Relational Databases: Relational databases have structured tables and predefined schema, while non-relational databases are more flexible but less suitable for complex relationships.
 SQL vs NoSQL: SQL is schema-dependent, while NoSQL is schema-flexible and better for large-scale data.
