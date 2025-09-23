@@ -202,10 +202,105 @@ FROM employees;
 You **can** run:
 ```sql
 UPDATE emp_basic SET salary = 75000 WHERE emp_id = 101;
-```
 
-Because each row maps directly to a row in `employees`.
+A **materialized view** is a database object that stores the results of a query physically, unlike a regular view which is just a saved query. This makes materialized views ideal for improving performance on complex joins, aggregations, or frequently accessed data.
 
 ---
 
-Let me know if you’d like a tabular comparison of updatable vs non-updatable views, or a checklist for designing views that support inserts and updates.
+### 🧠 Key Features
+
+- **Stored on disk**: Data is physically saved, not computed on-the-fly.
+- **Faster reads**: Great for reporting and analytics.
+- **Needs refresh**: Can be updated manually or automatically to reflect changes in base tables.
+
+---
+
+### ✅ Syntax (PostgreSQL Example)
+
+```sql
+CREATE MATERIALIZED VIEW sales_summary AS
+SELECT region, SUM(sales) AS total_sales
+FROM sales_data
+GROUP BY region;
+```
+
+To refresh:
+
+```sql
+REFRESH MATERIALIZED VIEW sales_summary;
+```
+
+---
+
+### 🔄 Use Cases
+
+| Use Case                     | Benefit                              |
+|-----------------------------|--------------------------------------|
+| Heavy aggregations           | Speeds up reporting queries          |
+| Joins across large tables    | Reduces computation time             |
+| Snapshot of external data    | Useful for caching API results       |
+| Offline analytics            | Enables querying without live access |
+
+---
+
+### ⚠️ Considerations
+
+- **Storage cost**: Takes up disk space.
+- **Staleness**: Data can become outdated unless refreshed.
+- **Write performance**: Not ideal for frequently changing data.
+
+---
+Great question, Saibabu! Here's a crisp, example-driven comparison between a **View** and a **Materialized View**, tailored for your analytical mindset:
+
+---
+
+### 🔍 Core Differences: View vs Materialized View
+
+| Feature                  | View                                           | Materialized View                                |
+|--------------------------|------------------------------------------------|--------------------------------------------------|
+| **Storage**              | No physical storage; just a saved query       | Physically stores query result in the database   |
+| **Performance**          | Slower for complex queries (computed on access) | Faster reads (precomputed and stored)            |
+| **Freshness**            | Always shows latest data                      | Can become stale; needs manual or scheduled refresh |
+| **Usage**                | Lightweight, ideal for real-time data         | Heavy-duty reporting, caching, analytics         |
+| **Refresh Options**      | Not applicable                                | Manual or automatic (`REFRESH MATERIALIZED VIEW`) |
+| **Write Operations**     | Not allowed                                    | Not allowed (read-only snapshot)                 |
+
+---
+
+### 🧪 Example
+
+#### Regular View
+```sql
+CREATE VIEW active_employees AS
+SELECT * FROM employees WHERE status = 'active';
+```
+- Every time you query `active_employees`, it runs the SELECT again.
+
+#### Materialized View
+```sql
+CREATE MATERIALIZED VIEW active_employees_mv AS
+SELECT * FROM employees WHERE status = 'active';
+```
+- Data is stored. You must run:
+```sql
+REFRESH MATERIALIZED VIEW active_employees_mv;
+```
+to update it.
+
+---
+
+### 🧠 When to Use What
+
+- Use **View** when:
+  - You need **live data**
+  - The query is **lightweight**
+  - You want **up-to-date results**
+
+- Use **Materialized View** when:
+  - The query is **expensive**
+  - You need **fast access**
+  - Data can be **slightly stale**
+
+---
+
+Would you like a cheat sheet comparing how views and materialized views behave across PostgreSQL, Oracle, and SQL Server? Or maybe a real-world use case for reporting dashboards?
