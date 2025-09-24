@@ -1,0 +1,64 @@
+Great question, Saibabu — `TO_CHAR()` and `EXTRACT()` are essential tools for **date-time manipulation and formatting** in SQL. Here's a crisp, example-rich breakdown tailored to your style:
+
+---
+
+## 🧮 `TO_CHAR()` — Format Dates, Numbers, and More
+
+Converts a **date, timestamp, or number** into a **string** using a format model.
+
+### 🔧 Syntax
+```sql
+TO_CHAR(expression, 'format_model')
+```
+
+### ✅ Examples
+
+| Use Case | Query | Output |
+|----------|-------|--------|
+| Format date | `TO_CHAR(order_date, 'YYYY-MM-DD')` | `'2025-09-24'` |
+| Month name | `TO_CHAR(order_date, 'Month')` | `'September '` |
+| Time only | `TO_CHAR(order_date, 'HH24:MI:SS')` | `'15:46:00'` |
+| Currency | `TO_CHAR(sales_amount, 'L999G999D99')` | `'₹1,23,456.78'` |
+
+**Use case:** Perfect for generating readable reports, invoices, or logs.
+
+---
+
+## 🔍 `EXTRACT()` — Pull Specific Date/Time Parts
+
+Extracts a **numeric value** from a date or timestamp (e.g., year, month, day, hour).
+
+### 🔧 Syntax
+```sql
+EXTRACT(field FROM source)
+```
+
+### ✅ Examples
+
+| Use Case | Query | Output |
+|----------|-------|--------|
+| Year | `EXTRACT(YEAR FROM order_date)` | `2025` |
+| Month | `EXTRACT(MONTH FROM order_date)` | `9` |
+| Day | `EXTRACT(DAY FROM order_date)` | `24` |
+| Hour | `EXTRACT(HOUR FROM order_time)` | `15` |
+| Week | `EXTRACT(WEEK FROM order_date)` | `39` |
+
+**Use case:** Ideal for filtering, grouping, or aggregating by time units.
+
+---
+
+### 🧠 Real-World Combo Example
+
+```sql
+SELECT
+  order_id,
+  TO_CHAR(order_date, 'DD-Mon-YYYY') AS formatted_date,
+  EXTRACT(MONTH FROM order_date) AS order_month
+FROM orders;
+```
+
+**Use case:** Show readable order dates and group by month for monthly sales analysis.
+
+---
+
+Would you like a cheat sheet module with `TO_CHAR`, `EXTRACT`, and `DATE_TRUNC` side-by-side — including BigQuery syntax variants? I can also add challenge prompts for your SQL workbook.
