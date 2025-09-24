@@ -1,0 +1,140 @@
+Perfect topic for advanced SQL reporting, Saibabu — `CUBE`, `ROLLUP`, and `GROUPING SETS` are powerful extensions to `GROUP BY` that let you generate **multi-level summaries** in a single query. Here’s a crystal-clear breakdown with examples and use cases tailored to your automation and reporting goals:
+
+---
+
+## 🧊 `CUBE` — All Combinations of Groupings
+
+Generates **all possible combinations** of the specified columns.
+
+### 🔧 Syntax
+```sql
+GROUP BY CUBE(column1, column2)
+```
+
+### ✅ Example
+```sql
+SELECT region, product, SUM(sales)
+FROM sales_data
+GROUP BY CUBE(region, product);
+```
+
+**Output includes:**
+
+- Total sales by region and product
+- Total sales by region (all products)
+- Total sales by product (all regions)
+- Grand total (all regions, all products)
+
+**Use case:** Full pivot-style summary for dashboards or Excel exports.
+
+---
+
+## 🔄 `ROLLUP` — Hierarchical Aggregation
+
+Generates **progressive subtotals** from left to right.
+
+### 🔧 Syntax
+```sql
+GROUP BY ROLLUP(column1, column2)
+```
+
+### ✅ Example
+```sql
+SELECT region, product, SUM(sales)
+FROM sales_data
+GROUP BY ROLLUP(region, product);
+```
+
+**Output includes:**
+
+- Sales by region and product
+- Sales by region (subtotal)
+- Grand total
+
+**Use case:** Perfect for nested reports — e.g., region-wise breakdown with subtotals.
+
+---
+
+## 🧮 `GROUPING SETS` — Custom Aggregation Sets
+
+Lets you define **exact combinations** of groupings — more flexible than `ROLLUP` or `CUBE`.
+
+### 🔧 Syntax
+```sql
+GROUP BY GROUPING SETS (
+  (region, product),
+  (region),
+  (product),
+  ()
+)
+```
+
+### ✅ Example
+```sql
+SELECT region, product, SUM(sales)
+FROM sales_data
+GROUP BY GROUPING SETS (
+  (region, product),
+  (region),
+  (product),
+  ()
+);
+```
+
+**Output includes:**
+
+- Sales by region and product
+- Sales by region only
+- Sales by product only
+- Grand total
+
+**Use case:** Tailored summaries for dashboards, exports, or manager-specific views.
+
+---
+
+## 🧠 Bonus: Use `GROUPING()` to Flag Nulls
+
+```sql
+SELECT
+  region,
+  product,
+  SUM(sales),
+  GROUPING(region) AS is_region_total,
+  GROUPING(product) AS is_product_total
+FROM sales_data
+GROUP BY CUBE(region, product);
+```
+
+**Use case:** Identify which rows are subtotals vs full totals — useful for formatting or filtering.
+
+---
+Here’s a crystal-clear comparison of `CUBE`, `ROLLUP`, and `GROUPING SETS` in tabular format — tailored for your SQL mastery and reporting goals:
+
+---
+
+### 📊 Comparison of CUBE vs ROLLUP vs GROUPING SETS
+
+| Feature               | `CUBE`                                  | `ROLLUP`                                 | `GROUPING SETS`                            |
+|-----------------------|------------------------------------------|-------------------------------------------|---------------------------------------------|
+| 🔍 Purpose            | All combinations of groupings            | Hierarchical subtotals                    | Custom-defined groupings                    |
+| 🧠 Aggregation Style  | Full cross-tab (pivot-like)              | Progressive (nested)                      | Manual control over grouping combinations   |
+| 📦 Output Rows        | Most (exponential)                       | Fewer than CUBE                           | Exactly what you specify                    |
+| 🧮 Syntax             | `GROUP BY CUBE(col1, col2)`              | `GROUP BY ROLLUP(col1, col2)`             | `GROUP BY GROUPING SETS ((...), (...))`     |
+| 📈 Use Case           | Dashboards, full summaries               | Reports with subtotals                    | Tailored exports, manager-specific views    |
+| 🧾 Includes Grand Total | ✅ Yes                                   | ✅ Yes                                     | ✅ Yes (if `()` is included)                 |
+| 🧩 Flexibility        | ❌ Fixed combinations                    | ❌ Fixed hierarchy                        | ✅ Fully customizable                        |
+| 🧠 Performance        | 🚨 Can be heavy on large datasets         | ⚠️ Moderate                               | ✅ Efficient with precise control            |
+
+---
+
+### 🧠 Example Summary
+
+| Grouping Type | Output Includes                                 |
+|---------------|--------------------------------------------------|
+| `CUBE(a, b)`  | `(a, b)`, `(a)`, `(b)`, `()`                     |
+| `ROLLUP(a, b)`| `(a, b)`, `(a)`, `()`                            |
+| `GROUPING SETS((a, b), (a), (b), ())` | Exactly those combinations |
+
+---
+
+Would you like this bundled into your SQL workbook with editable examples and challenge prompts? I can also add a section on `GROUPING()` and `GROUPING_ID()` for subtotal detection.
