@@ -1,0 +1,111 @@
+Let’s break down **SQL Transactions** from scratch to advanced — with crystal-clear structure, real-world relevance, and examples tailored to your automation and reporting goals, Saibabu.
+
+---
+
+## 🧾 1. What Is a Transaction?
+
+A **transaction** is a logical unit of work that contains one or more SQL statements. It ensures **data integrity** by treating multiple operations as a single atomic action.
+
+> ✅ Either **all** operations succeed (COMMIT)  
+> ❌ Or **none** take effect (ROLLBACK)
+
+---
+
+## 🧱 2. Key Properties — ACID
+
+| Property | Meaning                          | Why It Matters                          |
+|----------|----------------------------------|------------------------------------------|
+| **A**tomicity | All-or-nothing execution         | Prevents partial updates                 |
+| **C**onsistency | Preserves database rules        | Ensures valid state after transaction    |
+| **I**solation | Transactions don’t interfere     | Avoids dirty reads, race conditions      |
+| **D**urability | Changes survive failures         | Committed data is permanent              |
+
+---
+
+## 🔧 3. Basic Transaction Syntax
+
+```sql
+BEGIN TRANSACTION;
+
+-- SQL operations
+UPDATE accounts SET balance = balance - 1000 WHERE account_id = 101;
+UPDATE accounts SET balance = balance + 1000 WHERE account_id = 202;
+
+COMMIT; -- or ROLLBACK;
+```
+
+---
+
+## 🧪 4. Real-World Example: Payment Transfer
+
+```sql
+BEGIN TRANSACTION;
+
+UPDATE wallet SET balance = balance - 500 WHERE user_id = 1;
+UPDATE wallet SET balance = balance + 500 WHERE user_id = 2;
+
+IF @@ERROR <> 0
+  ROLLBACK;
+ELSE
+  COMMIT;
+```
+
+**Use case:** Ensure both debit and credit succeed — or neither happens.
+
+---
+
+## 🧠 5. Advanced Control: Savepoints
+
+Use `SAVEPOINT` to mark checkpoints inside a transaction.
+
+```sql
+BEGIN;
+
+UPDATE inventory SET stock = stock - 10 WHERE item_id = 501;
+SAVEPOINT before_discount;
+
+UPDATE discounts SET value = value + 5 WHERE item_id = 501;
+
+ROLLBACK TO SAVEPOINT before_discount; -- undo discount only
+
+COMMIT;
+```
+
+**Use case:** Roll back part of a transaction without discarding everything.
+
+---
+
+## 🔒 6. Isolation Levels (SQL Server, PostgreSQL, etc.)
+
+| Level               | Description                              | Risk Avoided             |
+|---------------------|------------------------------------------|---------------------------|
+| `READ UNCOMMITTED`  | Sees uncommitted changes                 | ❌ Dirty reads             |
+| `READ COMMITTED`    | Sees only committed data                 | ✅ Safe default            |
+| `REPEATABLE READ`   | Prevents changes to read rows            | ✅ Phantom reads avoided   |
+| `SERIALIZABLE`      | Full isolation, strictest                | ✅ All anomalies avoided   |
+
+```sql
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+-- SQL statements
+COMMIT;
+```
+
+---
+
+## 🧾 7. BigQuery Note
+
+BigQuery uses **implicit transactions** — no `BEGIN` or `COMMIT`. But you can simulate atomicity using scripting:
+
+```sql
+BEGIN
+  UPDATE ...
+  INSERT ...
+EXCEPTION WHEN ERROR THEN
+  -- handle rollback logic
+END;
+```
+
+---
+
+Would you like a cheat sheet module with transaction patterns, isolation level comparisons, and platform-specific syntax (SQL Server, PostgreSQL, BigQuery)? I can also add challenge prompts for your SQL workbook.
