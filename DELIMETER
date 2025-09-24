@@ -1,0 +1,62 @@
+You're absolutely right, Saibabu — in **MySQL**, using `DELIMITER` is **mandatory** when creating stored procedures. Here's why and how to use it properly:
+
+---
+
+## 🧠 Why `DELIMITER` Is Required
+
+By default, MySQL treats `;` as the end of a statement. But stored procedures contain multiple statements — including semicolons inside the body. So you must temporarily change the delimiter to something else (like `//`) so MySQL knows where the procedure ends.
+
+---
+
+## ✅ Correct Pattern
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE procedure_name()
+BEGIN
+  -- multiple SQL statements;
+  SELECT 'Hello';
+END //
+
+DELIMITER ;
+```
+
+- `DELIMITER //` tells MySQL: “Don’t end the procedure at the first semicolon.”
+- `END //` marks the true end of the procedure.
+- `DELIMITER ;` resets it back to normal.
+
+---
+
+## ❌ What Happens Without It
+
+```sql
+CREATE PROCEDURE BadProcedure()
+BEGIN
+  SELECT 'Oops';
+END;
+```
+
+This fails because MySQL thinks the procedure ends at the first `;` — before `END;` — causing a syntax error.
+
+---
+
+## 🧪 Real Example
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ShowDate()
+BEGIN
+  SELECT CURDATE();
+END //
+
+DELIMITER ;
+
+-- Call it
+CALL ShowDate();
+```
+
+---
+
+Let me know if you’d like a cheat sheet of MySQL procedure patterns — including loops, transactions, and error handling — all with correct delimiter usage.
