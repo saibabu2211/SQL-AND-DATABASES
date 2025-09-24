@@ -1,0 +1,194 @@
+Here’s a **complete, structured guide to Stored Procedures in SQL** — from basics to advanced — tailored to your automation, reporting, and modular design goals, Saibabu. This format is cheat-sheet friendly and example-rich for your SQL workbook.
+
+---
+
+## 🧾 1. What Is a Stored Procedure?
+
+A **stored procedure** is a named block of SQL code saved in the database that performs a specific task. It can accept parameters, include control flow, and be reused across queries.
+
+> Think of it as a reusable SQL function that can contain multiple statements, logic, and even transactions.
+
+---
+
+## 🧠 2. Why Use Stored Procedures?
+
+| Benefit         | Description                                                                 |
+|------------------|------------------------------------------------------------------------------|
+| 🔁 Reusability     | Write once, use many times                                                  |
+| 🧩 Modularity      | Encapsulate complex logic for clarity                                       |
+| 🚀 Performance     | Precompiled and optimized by the database engine                            |
+| 🔒 Security        | Restrict access via permissions and roles                                   |
+| 🧾 Maintainability | Centralized logic — easier to update and audit                              |
+
+---
+
+## 🔧 3. Basic Syntax (SQL Server Style)
+
+```sql
+CREATE PROCEDURE procedure_name
+  @param1 datatype,
+  @param2 datatype
+AS
+BEGIN
+  -- SQL statements
+END;
+```
+
+To execute:
+```sql
+EXEC procedure_name @param1 = value1, @param2 = value2;
+```
+
+---
+
+## ✅ 4. Scalar Logic Example: Add Two Numbers
+
+```sql
+CREATE PROCEDURE AddNumbers
+  @a INT,
+  @b INT
+AS
+BEGIN
+  PRINT 'Sum = ' + CAST(@a + @b AS VARCHAR);
+END;
+
+EXEC AddNumbers @a = 10, @b = 20;
+```
+
+---
+
+## 📦 5. Transactional Example: Transfer Money
+
+```sql
+CREATE PROCEDURE TransferMoney
+  @from INT,
+  @to INT,
+  @amount DECIMAL(10,2)
+AS
+BEGIN
+  BEGIN TRANSACTION;
+
+  UPDATE accounts SET balance = balance - @amount WHERE id = @from;
+  UPDATE accounts SET balance = balance + @amount WHERE id = @to;
+
+  IF @@ERROR <> 0
+    ROLLBACK;
+  ELSE
+    COMMIT;
+END;
+```
+
+**Use case:** Ensures atomic transfer — ideal for financial automation.
+
+---
+
+## 📊 6. Reporting Example: Monthly Sales Summary
+
+```sql
+CREATE PROCEDURE GetMonthlySales
+  @month INT,
+  @year INT
+AS
+BEGIN
+  SELECT region, SUM(sales_amount) AS total_sales
+  FROM sales
+  WHERE MONTH(sale_date) = @month AND YEAR(sale_date) = @year
+  GROUP BY region;
+END;
+```
+
+**Use case:** Dynamic report generation for dashboards or exports.
+
+---
+
+## 🧮 7. Output Parameters
+
+```sql
+CREATE PROCEDURE GetCustomerCount
+  @region NVARCHAR(50),
+  @count INT OUTPUT
+AS
+BEGIN
+  SELECT @count = COUNT(*) FROM customers WHERE region = @region;
+END;
+
+-- Execute
+DECLARE @total INT;
+EXEC GetCustomerCount @region = 'South', @count = @total OUTPUT;
+SELECT @total;
+```
+
+---
+
+## 🔁 8. Control Flow: IF, WHILE, CASE
+
+```sql
+CREATE PROCEDURE CheckStock
+  @item_id INT
+AS
+BEGIN
+  DECLARE @stock INT;
+  SELECT @stock = stock FROM inventory WHERE item_id = @item_id;
+
+  IF @stock < 10
+    PRINT 'Low stock';
+  ELSE
+    PRINT 'Stock sufficient';
+END;
+```
+
+---
+
+## 🔒 9. Error Handling (SQL Server)
+
+```sql
+BEGIN TRY
+  -- risky operations
+END TRY
+BEGIN CATCH
+  PRINT ERROR_MESSAGE();
+END CATCH
+```
+
+---
+
+## 🧠 10. Advanced Use Cases
+
+| Scenario                    | Description                                      |
+|-----------------------------|--------------------------------------------------|
+| 🧾 Invoice generation        | Loop through items, calculate totals             |
+| 📊 Dynamic filtering         | Accept filters for region, date, category        |
+| 🔍 Audit logging             | Insert into log table before/after updates       |
+| 🧮 Batch processing          | Loop through records with cursor or WHILE        |
+| 🔁 Nested procedures         | Call one procedure from another                  |
+
+---
+
+## 🧾 11. BigQuery Stored Procedures (Script-Based)
+
+```sql
+CREATE PROCEDURE my_proc()
+BEGIN
+  DECLARE total INT64;
+  SET total = (SELECT COUNT(*) FROM customers);
+  SELECT total;
+END;
+```
+
+**Note:** BigQuery uses scripting — no `EXEC`, just `CALL my_proc();`
+
+---
+
+## 🧩 12. Stored Procedure vs UDF
+
+| Feature             | Stored Procedure           | User-Defined Function (UDF)       |
+|---------------------|----------------------------|-----------------------------------|
+| Returns             | None or table              | Scalar or table                   |
+| Control Flow        | ✅ Yes (IF, WHILE, etc.)    | ❌ Limited                        |
+| Transactions        | ✅ Supported                | ❌ Not supported                  |
+| Use in SELECT       | ❌ Not directly             | ✅ Scalar UDFs only               |
+| Reusability         | ✅ High                     | ✅ High                           |
+
+---
+
+Would you like this formatted into a modular SQL workbook section with editable templates and challenge prompts? I can also add platform-specific syntax for PostgreSQL, MySQL, and BigQuery.
