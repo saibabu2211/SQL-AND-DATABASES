@@ -1,0 +1,269 @@
+Window functions in SQL are powerful tools for performing calculations across a set of table rows that are somehow related to the current row. Unlike aggregate functions, they don’t collapse rows — they return a value for every row in the result set.
+
+Here’s a concise breakdown tailored to your style 👇
+
+---
+
+### 🪟 What Are Window Functions?
+
+- Operate over a **window (subset)** of rows defined by `OVER()`
+- Preserve individual rows while adding computed columns
+- Commonly used for **ranking**, **running totals**, **moving averages**, and **comparisons**
+
+---
+
+### 🔧 Syntax Structure
+
+```sql
+function_name(column) OVER (
+  PARTITION BY column_to_group
+  ORDER BY column_to_sort
+  ROWS BETWEEN ... AND ...
+)
+```
+
+---
+
+### 🧰 Common Window Functions
+
+| Function         | Purpose                                | Example Use Case                          |
+|------------------|----------------------------------------|-------------------------------------------|
+| `ROW_NUMBER()`   | Unique row index per partition         | Rank employees by salary within dept      |
+| `RANK()`         | Rank with gaps                         | Competition-style ranking                 |
+| `DENSE_RANK()`   | Rank without gaps                      | Salary bands                              |
+| `NTILE(n)`       | Divide rows into n buckets             | Quartile analysis                         |
+| `LEAD()`         | Next row’s value                       | Compare current vs next month’s sales     |
+| `LAG()`          | Previous row’s value                   | Month-over-month change                   |
+| `FIRST_VALUE()`  | First value in window                  | Earliest transaction per customer         |
+| `LAST_VALUE()`   | Last value in window                   | Latest transaction per customer           |
+| `SUM()` / `AVG()`| Running totals / averages              | Cumulative revenue                        |
+
+---
+
+### 🧪 Example: Running Total of Sales
+
+```sql
+SELECT
+  employee_id,
+  sale_date,
+  amount,
+  SUM(amount) OVER (
+    PARTITION BY employee_id
+    ORDER BY sale_date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS running_total
+FROM sales;
+Window functions shine in real-world analytics, reporting, and automation — especially in business environments like yours, Saibabu. Here's a curated list of **practical use cases** that align with your SQL mastery goals and workplace automation focus:
+
+---
+
+### 📊 1. **Running Totals and Cumulative Metrics**
+Track progressive sums or averages without collapsing rows.
+
+```sql
+SUM(sales_amount) OVER (PARTITION BY region ORDER BY sale_date)
+```
+**Use case:** Monthly cumulative revenue per region.
+
+---
+
+### 🏆 2. **Ranking Within Groups**
+Assign ranks based on performance or metrics.
+
+```sql
+RANK() OVER (PARTITION BY department ORDER BY salary DESC)
+```
+**Use case:** Identify top earners in each department.
+
+---
+
+### 🔁 3. **Comparing Current vs Previous/Next Rows**
+Use `LAG()` and `LEAD()` to compare trends.
+
+```sql
+LAG(sales_amount) OVER (PARTITION BY product_id ORDER BY sale_date)
+```
+**Use case:** Month-over-month sales change per product.
+
+---
+
+### 🧮 4. **Percentile and Quartile Bucketing**
+Use `NTILE(n)` to segment data into equal parts.
+
+```sql
+NTILE(4) OVER (ORDER BY test_score)
+```
+**Use case:** Assign students to performance quartiles.
+
+---
+
+### 🕵️ 5. **First and Last Value in a Group**
+Capture boundary values for audit or reporting.
+
+```sql
+FIRST_VALUE(login_time) OVER (PARTITION BY user_id ORDER BY session_start)
+```
+**Use case:** Identify first login time per user.
+
+---
+
+### 🧾 6. **Flagging Duplicates or Changes**
+Detect changes in values across rows.
+
+```sql
+CASE WHEN LAG(status) OVER (PARTITION BY order_id ORDER BY update_time) != status THEN 'Changed' ELSE 'Unchanged' END
+```
+**Use case:** Track status changes in order lifecycle.
+
+---
+
+### 📅 7. **Rolling Averages and Moving Windows**
+Smooth out fluctuations over time.
+
+```sql
+AVG(sales_amount) OVER (
+  PARTITION BY product_id
+  ORDER BY sale_date
+  ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+)
+```
+**Use case:** 3-day moving average for sales.
+
+---
+
+### 📋 8. **Audit Trail and Versioning**
+Track historical changes without losing granularity.
+
+```sql
+ROW_NUMBER() OVER (PARTITION BY record_id ORDER BY modified_date DESC)
+```
+**Use case:** Keep latest version of each record.
+
+Absolutely, Saibabu — let’s level up with **complex, real-world examples** of window functions that mirror the kind of analytics and automation you’re building. These go beyond basic ranking and totals, and show how to combine multiple window functions, filters, and business logic.
+
+---
+
+## 🧠 1. **Detecting Price Changes and Flagging First Occurrence**
+
+```sql
+SELECT
+  product_id,
+  price,
+  change_date,
+  LAG(price) OVER (PARTITION BY product_id ORDER BY change_date) AS previous_price,
+  CASE
+    WHEN LAG(price) OVER (PARTITION BY product_id ORDER BY change_date) != price THEN 'Changed'
+    ELSE 'Unchanged'
+  END AS price_status,
+  ROW_NUMBER() OVER (
+    PARTITION BY product_id, price
+    ORDER BY change_date
+  ) AS price_version
+FROM product_price_history;
+```
+
+**Use case:** Track price changes and version each price per product. Useful for audit trails and pricing dashboards.
+
+---
+
+## 📈 2. **Rolling 7-Day Sales Average with Gaps**
+
+```sql
+SELECT
+  store_id,
+  sale_date,
+  SUM(sales_amount) OVER (
+    PARTITION BY store_id
+    ORDER BY sale_date
+    ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+  ) / 7.0 AS rolling_avg_7_day
+FROM daily_sales;
+```
+
+**Use case:** Smooth out daily fluctuations for performance reviews. Ideal for dashboards and forecasting.
+
+---
+
+## 🧾 3. **Latest Status per Order with Full History**
+
+```sql
+SELECT *
+FROM (
+  SELECT
+    order_id,
+    status,
+    updated_at,
+    ROW_NUMBER() OVER (
+      PARTITION BY order_id
+      ORDER BY updated_at DESC
+    ) AS rn
+  FROM order_status_log
+) AS ranked
+WHERE rn = 1;
+```
+
+**Use case:** Extract latest status per order while keeping full logs for traceability.
+
+---
+
+## 🧮 4. **Cumulative Sales by Region and Product Category**
+
+```sql
+SELECT
+  region,
+  category,
+  sale_date,
+  product_id,
+  SUM(sales_amount) OVER (
+    PARTITION BY region, category
+    ORDER BY sale_date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS cumulative_sales
+FROM sales_data;
+```
+
+**Use case:** Multi-level aggregation for regional and category-wise performance tracking.
+
+---
+
+## 🧪 5. **Detecting First Login of the Day per User**
+
+```sql
+SELECT *
+FROM (
+  SELECT
+    user_id,
+    login_time,
+    DATE(login_time) AS login_date,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id, DATE(login_time)
+      ORDER BY login_time
+    ) AS rn
+  FROM user_logins
+) AS ranked
+WHERE rn = 1;
+```
+
+**Use case:** Identify first login per user per day — useful for attendance, productivity, or fraud detection.
+
+---
+
+## 🧠 Bonus: Combine Aggregates + Window Functions
+
+```sql
+SELECT
+  employee_id,
+  department,
+  salary,
+  AVG(salary) OVER (PARTITION BY department) AS dept_avg,
+  salary - AVG(salary) OVER (PARTITION BY department) AS deviation_from_avg
+FROM employees;
+```
+
+**Use case:** Spot outliers in salary distribution within departments.
+
+---
+
+Would you like these bundled into a cheat sheet module for your SQL workbook — with editable examples and challenge prompts? I can also add BigQuery syntax variants if you’re translating across platforms.
+
+---
