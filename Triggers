@@ -1,0 +1,105 @@
+Here’s a complete walkthrough of SQL **triggers** from start to finish, tailored for MySQL (but I’ll note differences for other databases too). This includes syntax, types, examples, and best practices—all in one modular guide.
+
+---
+
+## 🧠 What Is a Trigger?
+
+A **trigger** is a stored procedure that automatically executes in response to a specific event on a table: `INSERT`, `UPDATE`, or `DELETE`.
+
+---
+
+## 🧩 Trigger Lifecycle Overview
+
+| Phase        | Description |
+|--------------|-------------|
+| **Create**   | Define the trigger with event and timing |
+| **Fire**     | Trigger executes when the event occurs |
+| **Access**   | Use `OLD` and `NEW` to access row data |
+| **Drop**     | Remove the trigger when no longer needed |
+
+---
+
+## 🛠️ Trigger Syntax (MySQL)
+
+```sql
+CREATE TRIGGER trigger_name
+{BEFORE | AFTER} {INSERT | UPDATE | DELETE}
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- Trigger logic here
+END;
+```
+
+### 🔑 Keywords
+- `BEFORE` or `AFTER`: When the trigger runs
+- `INSERT`, `UPDATE`, `DELETE`: What event triggers it
+- `FOR EACH ROW`: Applies to every affected row
+- `OLD`: Refers to the row before change (used in `UPDATE`, `DELETE`)
+- `NEW`: Refers to the row after change (used in `INSERT`, `UPDATE`)
+
+---
+
+## 📦 Examples
+
+### 1. Audit Log on DELETE
+
+```sql
+CREATE TRIGGER log_deletion
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (emp_id, deleted_at)
+    VALUES (OLD.id, NOW());
+END;
+```
+
+### 2. Validate Salary Before Insert
+
+```sql
+CREATE TRIGGER validate_salary
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Salary cannot be negative';
+    END IF;
+END;
+```
+
+### 3. Track Changes on UPDATE
+
+```sql
+CREATE TRIGGER track_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO change_log (emp_id, old_salary, new_salary, changed_at)
+    VALUES (OLD.id, OLD.salary, NEW.salary, NOW());
+END;
+```
+
+---
+
+## 🧹 Dropping a Trigger
+
+```sql
+DROP TRIGGER IF EXISTS trigger_name;
+```
+
+---
+
+## 🧭 Differences Across Databases
+
+| Feature         | MySQL                     | PostgreSQL                  | SQL Server                  |
+|-----------------|---------------------------|-----------------------------|-----------------------------|
+| `OLD` / `NEW`   | Supported                 | Supported                   | Uses `INSERTED` / `DELETED` tables |
+| `SIGNAL`        | Supported for errors      | Use `RAISE EXCEPTION`       | Use `THROW` or `RAISERROR` |
+| `FOR EACH ROW`  | Required                  | Required                    | Not used (works on batches) |
+| Multiple Triggers | Allowed per event       | Allowed                     | Only one per event per table |
+
+---
+
+
+Would you like a cheat sheet comparing syntax across MySQL, PostgreSQL, and SQL Server? Or a real-world use case like auto-invoicing or inventory sync?
