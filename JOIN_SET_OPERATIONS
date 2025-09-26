@@ -1,0 +1,126 @@
+Here’s the **extended version** of your SQL Set Difference Cheat Sheet, Saibabu — now including **performance benchmarks**, **engine-specific notes**, and a **practice challenge section** to round it out.
+
+---
+
+## 🧠 SQL Set Difference Cheat Sheet  
+**EXCEPT vs NOT IN vs LEFT JOIN ... IS NULL vs NOT EXISTS**
+
+---
+
+### 🔹 1. Syntax Comparison
+
+| Technique              | Description                                                                 | Syntax Example                                                                 |
+|------------------------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **EXCEPT**             | Returns rows from first query not in second (set difference)               | `SELECT id FROM A EXCEPT SELECT id FROM B;`                                    |
+| **NOT IN**             | Filters rows where value is not in a subquery result                       | `SELECT id FROM A WHERE id NOT IN (SELECT id FROM B);`                         |
+| **LEFT JOIN + IS NULL**| Joins two tables and filters unmatched rows                                | `SELECT A.id FROM A LEFT JOIN B ON A.id = B.id WHERE B.id IS NULL;`           |
+| **NOT EXISTS**         | Filters rows where no match exists in subquery                             | `SELECT id FROM A WHERE NOT EXISTS (SELECT 1 FROM B WHERE B.id = A.id);`      |
+
+---
+
+### 🔹 2. Use Case Comparison
+
+| Use Case                          | Best Technique(s)                     |
+|-----------------------------------|---------------------------------------|
+| **Set difference between tables** | `EXCEPT`, `LEFT JOIN ... IS NULL`     |
+| **Scalar filtering**              | `NOT IN`, `NOT EXISTS`                |
+| **Handling NULLs safely**         | `NOT EXISTS`, `LEFT JOIN ... IS NULL` |
+| **Performance on large joins**    | `NOT EXISTS`, `EXCEPT` (PostgreSQL)   |
+| **MySQL compatibility**           | `LEFT JOIN ... IS NULL`, `NOT EXISTS` |
+
+---
+
+### 🔹 3. Engine Support
+
+| Technique     | MySQL | PostgreSQL | SQL Server | Oracle |
+|---------------|-------|------------|------------|--------|
+| `EXCEPT`      | ❌     | ✅          | ✅          | ✅      |
+| `NOT IN`      | ✅     | ✅          | ✅          | ✅      |
+| `LEFT JOIN`   | ✅     | ✅          | ✅          | ✅      |
+| `NOT EXISTS`  | ✅     | ✅          | ✅          | ✅      |
+
+---
+
+### 🔹 4. Performance & Safety Tips
+
+- ✅ `NOT EXISTS` is safest when dealing with **NULLs** — avoids unexpected exclusions.
+- ⚠️ `NOT IN` fails if subquery returns **NULLs** — use `NOT EXISTS` instead.
+- 🔄 `EXCEPT` removes duplicates unless using `EXCEPT ALL` (PostgreSQL only).
+- 🐢 `LEFT JOIN ... IS NULL` is intuitive but slower on large datasets.
+- 🔒 Always validate subquery results for NULLs when using `NOT IN`.
+
+---
+
+### 🔹 5. Real-World Example: Missing Customers
+
+```sql
+-- Using EXCEPT
+SELECT customer_id FROM orders
+EXCEPT
+SELECT customer_id FROM loyalty_members;
+
+-- Using NOT EXISTS
+SELECT customer_id
+FROM orders o
+WHERE NOT EXISTS (
+    SELECT 1 FROM loyalty_members lm WHERE lm.customer_id = o.customer_id
+);
+
+-- Using LEFT JOIN
+SELECT o.customer_id
+FROM orders o
+LEFT JOIN loyalty_members lm ON o.customer_id = lm.customer_id
+WHERE lm.customer_id IS NULL;
+```
+
+---
+
+### 🔹 6. Performance Benchmarks (PostgreSQL Example)
+
+| Technique     | Execution Time | Notes                                 |
+|---------------|----------------|----------------------------------------|
+| `EXCEPT`      | Fastest         | Set-based, optimized for difference   |
+| `NOT EXISTS`  | Very fast       | Index-aware, NULL-safe                |
+| `LEFT JOIN`   | Moderate        | Slower on large joins                 |
+| `NOT IN`      | Risky           | Fails with NULLs, slower on large sets|
+
+> Tip: Always test with `EXPLAIN ANALYZE` to compare query plans in your engine.
+
+---
+
+### 🔹 7. Practice Challenge
+
+**Dataset:**  
+- `employees(emp_id, emp_name)`  
+- `terminated(emp_id)`
+
+**Task:**  
+Find all current employees who are **not** in the terminated list using all four techniques.
+
+```sql
+-- EXCEPT
+SELECT emp_id FROM employees
+EXCEPT
+SELECT emp_id FROM terminated;
+
+-- NOT IN
+SELECT emp_id FROM employees
+WHERE emp_id NOT IN (SELECT emp_id FROM terminated);
+
+-- LEFT JOIN
+SELECT e.emp_id
+FROM employees e
+LEFT JOIN terminated t ON e.emp_id = t.emp_id
+WHERE t.emp_id IS NULL;
+
+-- NOT EXISTS
+SELECT emp_id
+FROM employees e
+WHERE NOT EXISTS (
+    SELECT 1 FROM terminated t WHERE t.emp_id = e.emp_id
+);
+```
+
+---
+
+Would you like me to format this into a workbook section with editable headers for engine-specific notes, or add a challenge tracker for practice queries? I can also build a companion section for **joins vs set operators** if you're expanding your SQL mastery workbook.
