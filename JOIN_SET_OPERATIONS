@@ -120,7 +120,72 @@ WHERE NOT EXISTS (
     SELECT 1 FROM terminated t WHERE t.emp_id = e.emp_id
 );
 ```
+Here’s a clear, example-driven explanation of **`EXISTS`** in SQL — perfect for your reporting and validation workflows, Saibabu.
 
 ---
 
-Would you like me to format this into a workbook section with editable headers for engine-specific notes, or add a challenge tracker for practice queries? I can also build a companion section for **joins vs set operators** if you're expanding your SQL mastery workbook.
+## 🧠 What Is `EXISTS`?
+
+`EXISTS` is a **logical operator** that checks whether a **subquery returns any rows**. If the subquery returns at least one row, `EXISTS` evaluates to **TRUE** — otherwise, it’s **FALSE**.
+
+It’s commonly used for:
+- **Conditional filtering**
+- **Existence checks**
+- **Correlated subqueries**
+
+---
+
+## 🛠️ Syntax
+
+```sql
+SELECT column1, column2
+FROM main_table mt
+WHERE EXISTS (
+    SELECT 1
+    FROM related_table rt
+    WHERE rt.key = mt.key
+);
+```
+
+- The `SELECT 1` is a placeholder — the subquery doesn’t need to return actual data.
+- The subquery is often **correlated**, meaning it refers to the outer query.
+
+---
+
+## 🔍 Real-World Example: Active Customers
+
+```sql
+SELECT customer_id, name
+FROM customers c
+WHERE EXISTS (
+    SELECT 1
+    FROM orders o
+    WHERE o.customer_id = c.customer_id
+);
+```
+
+This returns customers **who have placed at least one order**.
+
+---
+
+## ⚡ Performance Notes
+
+| Feature            | Behavior                                                                 |
+|--------------------|--------------------------------------------------------------------------|
+| **Short-circuits** | Stops scanning once a match is found — efficient for large datasets      |
+| **NULL-safe**      | Unlike `NOT IN`, it handles NULLs gracefully                             |
+| **Index-aware**    | Performs well with indexed subquery columns                              |
+| **Correlated**     | Can be slower if subquery is complex or unindexed                        |
+
+---
+
+## ✅ When to Use `EXISTS`
+
+- You need to **check for presence**, not retrieve data.
+- You want **NULL-safe filtering**.
+- You’re working with **large datasets** and want early termination.
+- You’re writing **portable SQL** across engines (MySQL, PostgreSQL, SQL Server, Oracle).
+
+---
+
+Would you like a companion section comparing `EXISTS` vs `IN` vs `JOIN` with performance benchmarks and reporting use cases? I can also add a challenge section for validating sales, inventory, or customer churn.
